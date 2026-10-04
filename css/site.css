@@ -1,0 +1,64 @@
+/* The ALT HQ: homepage styles. Brand colours: cerulean #0088CC (large headings only), deep blue #005B94, yellow #FFD200, charcoal #1E2229, slate #4A5568. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;background:#FFFFFF;overflow-x:hidden}
+img{max-width:100%}
+a{color:#005B94}a:hover{color:#003F68}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid #FFD200;outline-offset:3px}
+html{scroll-padding-top:84px}
+.alt-nav-links{display:flex}
+.alt-menu-btn{display:none}
+#alt-mobile-menu[hidden]{display:none !important}
+.alt-hov{transition:background-color .25s ease,transform .25s ease,box-shadow .25s ease,border-color .25s ease}
+.alt-hov *{transition:color .25s ease}
+.alt-photo{transition:transform .25s ease,box-shadow .25s ease}
+@media (hover: hover) and (pointer: fine){
+.alt-hov:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,40,70,.18)}
+.alt-hov-yellow:hover{background:#FFD200 !important;border-color:#FFD200 !important}
+.alt-hov-yellow:hover *{color:#1E2229 !important}
+.alt-hov-cerulean:hover{background:#0077B3 !important;border-color:#0077B3 !important}
+.alt-hov-cerulean:hover *{color:#FFFFFF !important}
+.alt-hov-deep:hover{background:#005B94 !important;border-color:#005B94 !important}
+.alt-hov-deep:hover *{color:#FFFFFF !important}
+.alt-photo:hover{transform:translateY(-8px);box-shadow:0 18px 36px rgba(0,40,70,.22)}
+}
+@media (prefers-reduced-motion: reduce){.alt-hov,.alt-hov *,.alt-photo{transition:none}.alt-hov:hover,.alt-photo:hover{transform:none}}
+@media (max-width: 1180px){
+.alt-g4{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+.alt-nav-links{gap:22px !important}
+.alt-h1{font-size:52px !important}
+.alt-authors{grid-template-columns:140px minmax(0,1fr) !important;gap:20px !important}
+}
+@media (max-width: 960px){
+.alt-g2,.alt-g3,.alt-hero,.alt-buy{grid-template-columns:minmax(0,1fr) !important}
+.alt-nav-links{display:none !important}
+.alt-menu-btn{display:inline-flex}
+.alt-h1{font-size:42px !important}
+.alt-h2{font-size:30px !important}
+.alt-pad{padding-left:24px !important;padding-right:24px !important}
+section.alt-pad{padding-top:64px !important;padding-bottom:64px !important}
+.alt-journey{flex-direction:column !important}
+.alt-arrow{transform:rotate(90deg)}
+.alt-hero{gap:40px !important}
+.alt-hero-img{max-width:440px !important}
+.alt-buy{gap:32px !important;justify-items:start}
+}
+@media (max-width: 640px){
+.alt-g4{grid-template-columns:minmax(0,1fr) !important}
+.alt-g2{gap:20px !important}
+.alt-authors{grid-template-columns:minmax(0,1fr) !important}
+.alt-authors img{max-width:200px}
+.alt-h1{font-size:34px !important}
+.alt-h2{font-size:26px !important}
+.alt-pad{padding-left:18px !important;padding-right:18px !important}
+section.alt-pad{padding-top:52px !important;padding-bottom:52px !important}
+.alt-card-pad{padding:24px !important}
+.alt-form{padding:22px !important}
+.alt-form input{min-width:0 !important;width:100% !important}
+.alt-form label,.alt-form > div{width:100%}
+.alt-form button{width:100%}
+.alt-btns a{flex:1 1 100%;justify-content:center}
+.alt-hide-sm{display:none !important}
+.alt-logo{height:38px !important}
+.alt-buy-seal{width:60px !important;height:60px !important}
+.alt-footer-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+}
