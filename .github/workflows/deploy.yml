@@ -23,7 +23,7 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /thealthq.com
+          server-dir: /thealthq.com/
           port: 21
           protocol: ftp
           log-level: standard
