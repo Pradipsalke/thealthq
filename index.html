@@ -364,15 +364,18 @@
 </a>
 </div>
 </div>
-<form class="alt-form" style="padding: 32px; border-radius: 14px; background: #F8FAFC; border: 1px solid #E2E8F0; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px" action="#">
-<div style="display: flex; flex-direction: column; gap: 6px; max-width: 520px">
+<form class="alt-form" id="newsletterForm" style="padding: 32px; border-radius: 14px; background: #F8FAFC; border: 1px solid #E2E8F0; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px" >
+<div class="newsletter-form" style="display: flex; flex-direction: column; gap: 6px; max-width: 520px">
 <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 21px">The ALT HQ newsletter</h3>
 <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #4A5568">Occasional notes on building GCCs that lead. No spam.</p>
 </div>
 <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end">
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Work email<input type="email" placeholder="you@company.com" style="min-width: 260px; min-height: 48px; padding: 0 16px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 15px; font-family: inherit; box-sizing: border-box"></label>
-<button type="submit" style="min-height: 48px; padding: 0 24px; border: none; border-radius: 999px; background: #005B94; color: #FFFFFF; font-weight: 600; font-size: 15px; font-family: inherit; cursor: pointer">Subscribe</button>
+<label style="display: flex; flex-direction: column; gap: 6px; font-size: 14px; font-weight: 500">Work email<input  type="email"
+                    id="newsletterEmail"
+                    name="email" required placeholder="you@company.com" style="min-width: 260px; min-height: 48px; padding: 0 16px; border: 1px solid #CBD5E1; border-radius: 10px; font-size: 15px; font-family: inherit; box-sizing: border-box"></label>
+<button type="submit" id="subscribeBtn" style="min-height: 48px; padding: 0 24px; border: none; border-radius: 999px; background: #005B94; color: #FFFFFF; font-weight: 600; font-size: 15px; font-family: inherit; cursor: pointer">Subscribe</button>
 </div>
+<p id="newsletterMessage"></p>
 </form>
 </div>
 </section>
@@ -434,6 +437,122 @@
 (function(){var b=document.getElementById('alt-menu-btn'),m=document.getElementById('alt-mobile-menu');if(!b||!m)return;
 function set(o){m.hidden=!o;b.setAttribute('aria-expanded',o?'true':'false');b.setAttribute('aria-label',o?'Close menu':'Open menu');b.querySelector('.ic-open').style.display=o?'none':'block';b.querySelector('.ic-close').style.display=o?'block':'none';}
 b.addEventListener('click',function(){set(m.hidden)});m.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(){set(false)})});set(false);})();
+</script>
+<script>
+
+const NEWSLETTER_API =
+    "https://script.google.com/macros/s/AKfycbz8j4wyFAtbhtkrMM1g4O3VNmsu3bQeH9eMFfQrcdr-p-GfiCZntp4KeED23G3knfmi/exec";
+
+
+const newsletterForm =
+    document.getElementById("newsletterForm");
+
+const newsletterEmail =
+    document.getElementById("newsletterEmail");
+
+const subscribeBtn =
+    document.getElementById("subscribeBtn");
+
+const newsletterMessage =
+    document.getElementById("newsletterMessage");
+
+
+newsletterForm.addEventListener("submit", async function (event) {
+
+    event.preventDefault();
+
+    const email = newsletterEmail.value.trim();
+
+    if (!email) {
+        showMessage(
+            "Please enter your email address.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    // Basic email validation
+    const emailRegex =
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!emailRegex.test(email)) {
+
+        showMessage(
+            "Please enter a valid email address.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    // Disable button
+    subscribeBtn.disabled = true;
+
+    subscribeBtn.textContent = "Subscribing...";
+
+
+    try {
+
+        await fetch(NEWSLETTER_API, {
+
+            method: "POST",
+
+            mode: "no-cors",
+
+            headers: {
+                "Content-Type": "text/plain;charset=utf-8"
+            },
+
+            body: JSON.stringify({
+
+                email: email,
+
+                source: "Website"
+
+            })
+
+        });
+
+
+        showMessage(
+            "Thank you! You have been subscribed.",
+            "success"
+        );
+
+        newsletterForm.reset();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            "Something went wrong. Please try again.",
+            "error"
+        );
+
+    } finally {
+
+        subscribeBtn.disabled = false;
+
+        subscribeBtn.textContent = "Subscribe";
+
+    }
+
+});
+
+
+function showMessage(message, type) {
+
+    newsletterMessage.textContent = message;
+
+    newsletterMessage.className = type;
+
+}
+
 </script>
 </body>
 </html>
