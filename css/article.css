@@ -21,5 +21,6 @@ a:focus-visible,button:focus-visible{outline:3px solid #FFD200;outline-offset:3p
 .art-body h2{font-size:22px;margin-top:36px}
 .art-body figure{padding:20px !important}
 .art-body blockquote{font-size:19px !important}
+.art-author-card{flex-direction:column !important;padding:20px !important}
 .art-logo{height:38px !important}
 }

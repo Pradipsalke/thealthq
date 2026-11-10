@@ -11,8 +11,8 @@ require_once __DIR__ . '/../config/db.php';
 
 try {
     $db = getDB();
-    $stmt = $db->query("SELECT id, title, top_badge, category, headline, description, link_url, link_text, is_external, banner_bg, banner_text_color, badge_color, display_order FROM insights WHERE is_active = 1 ORDER BY display_order ASC, id ASC");
-    $insights = $stmt->fetchAll();
+    $stmt = $db->query("SELECT id, insight_type, slug, title, top_badge, category, headline, description, link_url, link_text, is_external, banner_bg, banner_text_color, badge_color, display_order FROM insights WHERE is_active = 1 ORDER BY display_order ASC, id ASC");
+    $insights = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode([
         'status' => 'success',
@@ -26,4 +26,3 @@ try {
         'message' => 'Failed to load insights: ' . $e->getMessage()
     ]);
 }
-

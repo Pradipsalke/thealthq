@@ -87,6 +87,10 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
                     </tr>
                 <?php else: ?>
                     <?php foreach ($recentInsights as $item): ?>
+                        <?php 
+                        $isExt = ($item['insight_type'] === 'external' || !empty($item['is_external']));
+                        $viewUrl = $isExt ? $item['link_url'] : ('../' . $item['link_url']);
+                        ?>
                         <tr>
                             <td><span style="font-weight: 700; color: #005B94;">#<?= $item['display_order'] ?></span></td>
                             <td>
@@ -100,8 +104,8 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
                             </td>
                             <td style="max-width: 320px;"><?= htmlspecialchars($item['headline']) ?></td>
                             <td>
-                                <a href="<?= htmlspecialchars($item['link_url']) ?>" target="_blank" style="color: #005B94; font-size: 13px; text-decoration: none;">
-                                    <?= htmlspecialchars($item['link_text']) ?>
+                                <a href="<?= htmlspecialchars($viewUrl) ?>" target="_blank" rel="noopener" style="color: #005B94; font-size: 13px; text-decoration: none;">
+                                    <?= htmlspecialchars($item['link_text'] ?? ($isExt ? 'View external ↗' : 'View article →')) ?>
                                     <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 11px;"></i>
                                 </a>
                             </td>
