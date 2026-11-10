@@ -114,7 +114,7 @@ try {
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
-<link rel="stylesheet" href="css/carousel.css">
+<link rel="stylesheet" href="css/carousel.css?v=<?= time() ?>">
 
 <!-- font awesome icons  -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -583,6 +583,6 @@ function showMessage(message, type) {
 }
 </script>
 
-<script src="js/carousel.js"></script>
+<script src="js/carousel.js?v=<?= time() ?>"></script>
 </body>
 </html>

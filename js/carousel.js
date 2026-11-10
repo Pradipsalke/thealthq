@@ -1,6 +1,6 @@
 /**
  * The ALT HQ - Carousel & Video Lightbox Engine
- * With Auto-play and Dot Controls
+ * Infinite Auto-play with Persistent Dot Controls
  */
 
 (function () {
@@ -15,13 +15,6 @@
       this.track = element.querySelector('.alt-carousel-track');
       this.dotsContainer = element.querySelector('.alt-carousel-dots');
 
-      this.btnPrev = element.querySelector('.alt-carousel-btn.alt-prev') ||
-                     document.querySelector(`[data-target="${element.id}"].alt-prev`) ||
-                     document.querySelector(`#${element.dataset.carousel}-carousel-nav .alt-prev`);
-      this.btnNext = element.querySelector('.alt-carousel-btn.alt-next') ||
-                     document.querySelector(`[data-target="${element.id}"].alt-next`) ||
-                     document.querySelector(`#${element.dataset.carousel}-carousel-nav .alt-next`);
-
       this.currentIndex = 0;
       this.isDragging = false;
       this.startPos = 0;
@@ -29,8 +22,8 @@
       this.prevTranslate = 0;
       this.dragDistance = 0;
 
-      // Autoplay configuration: rotates smoothly every 4.5 seconds
-      this.autoplayDelay = options.autoplayDelay || 4500;
+      // Autoplay: 4 seconds interval
+      this.autoplayDelay = options.autoplayDelay || 4000;
       this.autoplayTimer = null;
       this.isPaused = false;
 
@@ -40,17 +33,22 @@
 
     init() {
       if (!this.track) return;
-      this.slides = Array.from(this.track.children);
-      if (this.slides.length === 0) return;
 
+      // Filter out any clones to get true original slides
+      this.originalSlides = Array.from(this.track.children).filter(
+        (el) => !el.classList.contains('is-clone')
+      );
+      this.originalCount = this.originalSlides.length;
+      if (this.originalCount === 0) return;
+
+      this.setupClones();
       this.bindEvents();
-      this.updateLayout();
       this.buildDots();
-      this.updateControls();
+      this.goToSlide(0, false);
       this.startAutoplay();
 
       window.addEventListener('resize', () => {
-        this.updateLayout();
+        this.setupClones();
         this.buildDots();
         this.goToSlide(this.currentIndex, false);
         this.restartAutoplay();
@@ -64,64 +62,26 @@
       return 3;
     }
 
-    getMaxIndex() {
+    setupClones() {
+      // Remove any existing clones
+      this.track.querySelectorAll('.is-clone').forEach((el) => el.remove());
+
+      if (this.originalCount <= 1) {
+        this.slides = Array.from(this.track.children);
+        return;
+      }
+
+      // Clone sufficient slides to allow continuous seamless looping
       const visible = this.getVisibleCount();
-      return Math.max(0, this.slides.length - visible);
-    }
-
-    getSlideWidth() {
-      if (!this.slides[0]) return 0;
-      const slide = this.slides[0];
-      const style = window.getComputedStyle(this.track);
-      const gap = parseFloat(style.gap) || 24;
-      return slide.getBoundingClientRect().width + gap;
-    }
-
-    bindEvents() {
-      // Pause autoplay on mouse hover, resume on mouse leave
-      this.wrapper.addEventListener('mouseenter', () => {
-        this.isPaused = true;
-      });
-      this.wrapper.addEventListener('mouseleave', () => {
-        this.isPaused = false;
-      });
-
-      // Arrow buttons if present
-      if (this.btnPrev) {
-        this.btnPrev.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.prev();
-          this.restartAutoplay();
-        });
+      const cloneCount = Math.max(visible + 1, 3);
+      for (let i = 0; i < cloneCount; i++) {
+        const srcSlide = this.originalSlides[i % this.originalCount];
+        const clone = srcSlide.cloneNode(true);
+        clone.classList.add('is-clone');
+        clone.setAttribute('aria-hidden', 'true');
+        this.track.appendChild(clone);
       }
 
-      if (this.btnNext) {
-        this.btnNext.addEventListener('click', (e) => {
-          e.preventDefault();
-          this.next();
-          this.restartAutoplay();
-        });
-      }
-
-      // Touch & Mouse Dragging
-      this.track.addEventListener('touchstart', this.touchStart.bind(this), { passive: true });
-      this.track.addEventListener('touchmove', this.touchMove.bind(this), { passive: false });
-      this.track.addEventListener('touchend', this.touchEnd.bind(this));
-
-      this.track.addEventListener('mousedown', this.dragStart.bind(this));
-      window.addEventListener('mousemove', this.dragMove.bind(this));
-      window.addEventListener('mouseup', this.dragEnd.bind(this));
-
-      // Prevent link clicks during drag
-      this.track.addEventListener('click', (e) => {
-        if (this.dragDistance && Math.abs(this.dragDistance) > 10) {
-          e.preventDefault();
-          e.stopPropagation();
-        }
-      }, true);
-    }
-
-    updateLayout() {
       this.slides = Array.from(this.track.children);
     }
 
@@ -129,19 +89,19 @@
       if (!this.dotsContainer) return;
       this.dotsContainer.innerHTML = '';
 
-      const maxIdx = this.getMaxIndex();
-      if (maxIdx <= 0) {
+      if (this.originalCount <= 1) {
         this.dotsContainer.style.display = 'none';
         return;
       }
 
       this.dotsContainer.style.display = 'flex';
-      const dotCount = maxIdx + 1;
 
-      for (let i = 0; i < dotCount; i++) {
+      // Build one dot per original card
+      for (let i = 0; i < this.originalCount; i++) {
         const dot = document.createElement('button');
         dot.type = 'button';
-        dot.className = 'alt-carousel-dot' + (i === this.currentIndex ? ' active' : '');
+        dot.className =
+          'alt-carousel-dot' + (i === this.currentIndex % this.originalCount ? ' active' : '');
         dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
         dot.addEventListener('click', (e) => {
           e.preventDefault();
@@ -152,32 +112,25 @@
       }
     }
 
-    updateControls() {
-      const maxIdx = this.getMaxIndex();
+    updateDots() {
+      if (!this.dotsContainer) return;
+      const activeIdx = this.currentIndex % this.originalCount;
+      const dots = this.dotsContainer.querySelectorAll('.alt-carousel-dot');
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === activeIdx);
+      });
+    }
 
-      if (this.btnPrev) {
-        this.btnPrev.disabled = this.currentIndex <= 0;
-      }
-      if (this.btnNext) {
-        this.btnNext.disabled = this.currentIndex >= maxIdx;
-      }
-
-      if (this.dotsContainer) {
-        const dots = this.dotsContainer.querySelectorAll('.alt-carousel-dot');
-        dots.forEach((dot, idx) => {
-          dot.classList.toggle('active', idx === this.currentIndex);
-        });
-      }
+    getSlideWidth() {
+      if (!this.slides[0]) return 0;
+      const slide = this.slides[0];
+      const style = window.getComputedStyle(this.track);
+      const gap = parseFloat(style.gap) || 24;
+      return slide.getBoundingClientRect().width + gap;
     }
 
     goToSlide(index, animate = true) {
-      const maxIdx = this.getMaxIndex();
-      if (maxIdx <= 0) {
-        this.currentIndex = 0;
-      } else {
-        this.currentIndex = Math.max(0, Math.min(index, maxIdx));
-      }
-
+      this.currentIndex = index;
       const slideWidth = this.getSlideWidth();
       this.currentTranslate = -this.currentIndex * slideWidth;
       this.prevTranslate = this.currentTranslate;
@@ -185,47 +138,76 @@
       if (!animate) {
         this.track.style.transition = 'none';
       } else {
-        this.track.style.transition = 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)';
+        this.track.style.transition = 'transform 0.5s cubic-bezier(0.25, 1, 0.5, 1)';
       }
 
       this.track.style.transform = `translateX(${this.currentTranslate}px)`;
-      this.updateControls();
+      this.updateDots();
+    }
+
+    next() {
+      if (this.originalCount <= 1) return;
+      this.goToSlide(this.currentIndex + 1);
     }
 
     prev() {
-      const maxIdx = this.getMaxIndex();
+      if (this.originalCount <= 1) return;
       if (this.currentIndex <= 0) {
-        this.goToSlide(maxIdx);
+        // Jump seamlessly to clone and slide backward
+        this.goToSlide(this.originalCount, false);
+        void this.track.offsetWidth; // force reflow
+        this.goToSlide(this.originalCount - 1, true);
       } else {
         this.goToSlide(this.currentIndex - 1);
       }
     }
 
-    next() {
-      const maxIdx = this.getMaxIndex();
-      if (this.currentIndex >= maxIdx) {
-        this.goToSlide(0);
-      } else {
-        this.goToSlide(this.currentIndex + 1);
-      }
+    bindEvents() {
+      // Seamless loop reset when transition finishes at clone
+      this.track.addEventListener('transitionend', () => {
+        if (this.currentIndex >= this.originalCount) {
+          const remainder = this.currentIndex % this.originalCount;
+          this.goToSlide(remainder, false);
+        }
+      });
+
+      // Pause autoplay on mouse hover, resume on mouse leave
+      this.wrapper.addEventListener('mouseenter', () => {
+        this.isPaused = true;
+      });
+      this.wrapper.addEventListener('mouseleave', () => {
+        this.isPaused = false;
+      });
+
+      // Touch & Mouse Dragging
+      this.track.addEventListener('touchstart', this.touchStart.bind(this), { passive: true });
+      this.track.addEventListener('touchmove', this.touchMove.bind(this), { passive: false });
+      this.track.addEventListener('touchend', this.touchEnd.bind(this));
+
+      this.track.addEventListener('mousedown', this.dragStart.bind(this));
+      window.addEventListener('mousemove', this.dragMove.bind(this));
+      window.addEventListener('mouseup', this.dragEnd.bind(this));
+
+      // Prevent link clicks during drag gesture
+      this.track.addEventListener(
+        'click',
+        (e) => {
+          if (this.dragDistance && Math.abs(this.dragDistance) > 10) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+        },
+        true
+      );
     }
 
-    // Autoplay Methods
     startAutoplay() {
       this.stopAutoplay();
-      const maxIdx = this.getMaxIndex();
-      if (maxIdx <= 0) return;
+      if (this.originalCount <= 1) return;
 
       this.autoplayTimer = setInterval(() => {
         if (this.isPaused || this.isDragging) return;
-        const currentMax = this.getMaxIndex();
-        if (currentMax <= 0) return;
-
-        if (this.currentIndex >= currentMax) {
-          this.goToSlide(0);
-        } else {
-          this.goToSlide(this.currentIndex + 1);
-        }
+        this.next();
       }, this.autoplayDelay);
     }
 
@@ -241,7 +223,6 @@
       this.startAutoplay();
     }
 
-    // Drag / Touch Handlers
     dragStart(e) {
       if (e.button !== 0) return;
       this.stopAutoplay();
@@ -265,7 +246,7 @@
       this.track.classList.remove('is-dragging');
 
       const movedBy = this.dragDistance || 0;
-      const threshold = 60;
+      const threshold = 50;
 
       if (movedBy < -threshold) {
         this.next();
@@ -365,7 +346,7 @@
     open(type, url, title) {
       if (!this.modal) this.createModal();
 
-      // Pause all background carousels while video modal is active
+      // Pause all background carousels
       window.altCarousels?.forEach((c) => c.stopAutoplay());
 
       this.titleEl.textContent = title;
@@ -384,7 +365,8 @@
         if (ytId) {
           const iframe = document.createElement('iframe');
           iframe.src = `https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&rel=0`;
-          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+          iframe.allow =
+            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
           iframe.allowFullscreen = true;
           this.container.appendChild(iframe);
           this.linkEl.href = url;
@@ -403,7 +385,9 @@
 
     extractYouTubeId(url) {
       if (!url) return null;
-      const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+      const match = url.match(
+        /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/
+      );
       return match ? match[1] : null;
     },
 
@@ -418,37 +402,36 @@
     }
   };
 
-  // Dynamic Content Loader for Frontend (fallback if track empty)
+  // Dynamic Content Loader for Frontend (ensures latest DB content on both index.php and index.html)
   const DynamicLoader = {
-    async loadInsights(carouselEl) {
+    async syncFromAPI(carouselEl, type) {
       const track = carouselEl.querySelector('.alt-carousel-track');
-      if (!track || track.children.length > 0) return;
+      if (!track) return;
+
+      const endpoint = type === 'insights' ? 'api/get_insights.php' : 'api/get_videos.php';
 
       try {
-        const res = await fetch('api/get_insights.php');
+        const res = await fetch(`${endpoint}?t=${Date.now()}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();
-        if (json.status === 'success' && json.data.length > 0) {
-          track.innerHTML = json.data.map((item) => this.renderInsightCard(item)).join('');
+
+        if (json.status === 'success' && Array.isArray(json.data) && json.data.length > 0) {
+          // If content came from API, populate it dynamically
+          track.innerHTML = json.data
+            .map((item) =>
+              type === 'insights' ? this.renderInsightCard(item) : this.renderVideoCard(item)
+            )
+            .join('');
           new AltCarousel(carouselEl);
+          return;
         }
       } catch (err) {
-        console.warn('Could not fetch insights from API:', err);
+        // Fallback to existing server-rendered HTML if API not reachable
       }
-    },
 
-    async loadVideos(carouselEl) {
-      const track = carouselEl.querySelector('.alt-carousel-track');
-      if (!track || track.children.length > 0) return;
-
-      try {
-        const res = await fetch('api/get_videos.php');
-        const json = await res.json();
-        if (json.status === 'success' && json.data.length > 0) {
-          track.innerHTML = json.data.map((item) => this.renderVideoCard(item)).join('');
-          new AltCarousel(carouselEl);
-        }
-      } catch (err) {
-        console.warn('Could not fetch videos from API:', err);
+      // If already rendered via PHP or static fallback, initialize carousel
+      if (track.children.length > 0) {
+        new AltCarousel(carouselEl);
       }
     },
 
@@ -474,7 +457,8 @@
 
     renderVideoCard(item) {
       const isUpload = item.video_type === 'upload';
-      const isYtDirect = item.video_path.includes('youtube.com/watch') || item.video_path.includes('youtu.be/');
+      const isYtDirect =
+        item.video_path.includes('youtube.com/watch') || item.video_path.includes('youtu.be/');
       const useModal = isUpload || isYtDirect;
 
       const modalAttrs = useModal
@@ -522,17 +506,7 @@
 
     document.querySelectorAll('[data-carousel]').forEach((el) => {
       const type = el.dataset.carousel;
-      const track = el.querySelector('.alt-carousel-track');
-
-      if (track && track.children.length > 0) {
-        new AltCarousel(el);
-      } else {
-        if (type === 'insights') {
-          DynamicLoader.loadInsights(el);
-        } else if (type === 'videos') {
-          DynamicLoader.loadVideos(el);
-        }
-      }
+      DynamicLoader.syncFromAPI(el, type);
     });
   });
 
