@@ -14,6 +14,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/carousel.css">
 
 <!-- font awaesome icons  -->
  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -281,55 +282,90 @@
 <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #005B94">Insights</span>
 <h2 class="alt-h2" style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.15">Ideas beyond the book</h2>
 </div>
+<div style="display: flex; align-items: center; gap: 16px">
 <a href="#insights" style="font-weight: 600; font-size: 15px">All articles →</a>
+<div class="alt-carousel-nav" id="insights-carousel-nav">
+<button type="button" class="alt-carousel-btn alt-prev" aria-label="Previous insight" title="Previous">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+</button>
+<button type="button" class="alt-carousel-btn alt-next" aria-label="Next insight" title="Next">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+</button>
 </div>
-<div class="alt-g3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
-<a class="alt-hov" href="insights/punes-next-leap.html" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF">
+</div>
+</div>
+
+<div class="alt-carousel-wrapper" data-carousel="insights" id="insights-carousel">
+<div class="alt-carousel-viewport">
+<div class="alt-carousel-track">
+<div class="alt-carousel-slide">
+<a class="alt-hov" href="insights/punes-next-leap.html" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF; width: 100%;">
 <div style="height: 160px; background: #005B94; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px">
 <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #FFD200">Leadership perspective</span>
-<span style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 30px; line-height: 1.05; color: #FFFFFF">Pune’s Next Leap</span>
+<span style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 28px; line-height: 1.08; color: #FFFFFF">Pune’s Next Leap</span>
 </div>
-<div style="padding: 24px; display: flex; flex-direction: column; gap: 10px">
+<div style="padding: 24px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1">
 <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #005B94">GCC Ecosystem</span>
 <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 19px; line-height: 1.35">GCC leaders and government building a global innovation hub</h3>
 <span style="font-size: 14px; color: #4A5568">Nilesh Biniwale  ·  6 min read</span>
-<span style="font-size: 15px; font-weight: 600; color: #005B94">Read the article →</span>
+<span style="margin-top: auto; padding-top: 6px; font-size: 15px; font-weight: 600; color: #005B94">Read the article →</span>
 </div>
 </a>
-<a class="alt-hov" href="https://www.thoughtworks.com/perspectives/edition37-global-capability-centers/article" target="_blank" rel="noopener" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF">
+</div>
+<div class="alt-carousel-slide">
+<a class="alt-hov" href="https://www.thoughtworks.com/perspectives/edition37-global-capability-centers/article" target="_blank" rel="noopener" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF; width: 100%;">
 <div style="height: 160px; background: #1E2229; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px">
 <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #FFD200">Featured in Thoughtworks Perspectives</span>
-<span style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 26px; line-height: 1.1; color: #FFFFFF">Beyond the execution model</span>
+<span style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 28px; line-height: 1.08; color: #FFFFFF">Beyond the execution model</span>
 </div>
-<div style="padding: 24px; display: flex; flex-direction: column; gap: 10px">
+<div style="padding: 24px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1">
 <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #005B94">GCC Strategy</span>
 <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 19px; line-height: 1.35">Global capability centers: Driving innovation and growth</h3>
 <span style="font-size: 14px; line-height: 1.5; color: #4A5568">Nilesh Kulkarni on hiring for the right mandate, building GCC leadership and measuring the value a centre delivers.</span>
-<span style="font-size: 15px; font-weight: 600; color: #005B94">Read on thoughtworks.com ↗</span>
+<span style="margin-top: auto; padding-top: 6px; font-size: 15px; font-weight: 600; color: #005B94">Read on thoughtworks.com ↗</span>
 </div>
 </a>
-<a class="alt-hov" href="insights/triangle-apple-hourglass.html" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF">
+</div>
+<div class="alt-carousel-slide">
+<a class="alt-hov" href="insights/triangle-apple-hourglass.html" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF; width: 100%;">
 <div style="height: 160px; background: #FFD200; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: flex-end; gap: 4px">
 <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #1E2229">Leadership · Talent · AI</span>
-<span style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 26px; line-height: 1.08; color: #1E2229">From Triangle to Apple to Hourglass</span>
+<span style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 28px; line-height: 1.08; color: #1E2229">From Triangle to Apple to Hourglass</span>
 </div>
-<div style="padding: 24px; display: flex; flex-direction: column; gap: 10px">
+<div style="padding: 24px; display: flex; flex-direction: column; gap: 10px; flex-grow: 1">
 <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #005B94">Talent and Leadership</span>
 <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 700; font-size: 19px; line-height: 1.35">The organisation in the AI era</h3>
 <span style="font-size: 14px; color: #4A5568">Nilesh Biniwale  ·  7 min read</span>
-<span style="font-size: 15px; font-weight: 600; color: #005B94">Read the article →</span>
+<span style="margin-top: auto; padding-top: 6px; font-size: 15px; font-weight: 600; color: #005B94">Read the article →</span>
 </div>
 </a>
 </div>
+</div>
+</div>
+<div class="alt-carousel-dots"></div>
+</div>
+
 <div style="display: flex; flex-direction: column; gap: 24px">
 <div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px">
 <div style="display: flex; flex-direction: column; gap: 8px">
 <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #005B94">Watch and listen</span>
 <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 28px; line-height: 1.2">Conversations on building GCCs that lead</h3>
 </div>
+<div class="alt-carousel-nav" id="videos-carousel-nav">
+<button type="button" class="alt-carousel-btn alt-prev" aria-label="Previous video" title="Previous">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+</button>
+<button type="button" class="alt-carousel-btn alt-next" aria-label="Next video" title="Next">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+</button>
 </div>
-<div class="alt-g3" style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px">
-<a class="alt-hov" href="https://www.youtube.com/results?search_query=%22Building+the+GCC+of+Tomorrow%3A+Culture%2C+Technology+%26+Strategy%22" target="_blank" rel="noopener" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF">
+</div>
+
+<div class="alt-carousel-wrapper" data-carousel="videos" id="videos-carousel">
+<div class="alt-carousel-viewport">
+<div class="alt-carousel-track">
+<div class="alt-carousel-slide">
+<a class="alt-hov" href="https://www.youtube.com/results?search_query=%22Building+the+GCC+of+Tomorrow%3A+Culture%2C+Technology+%26+Strategy%22" target="_blank" rel="noopener" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF; width: 100%;">
 <div style="height: 150px; background: #005B94; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-sizing: border-box">
 <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #FFD200">Podcast · CXOTalks</span>
 <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="27" fill="#FFD200"></circle><path d="M23 18.5 L38 28 L23 37.5 Z" fill="#1E2229"></path></svg>
@@ -340,7 +376,9 @@
 <span style="margin-top: auto; padding-top: 6px; font-size: 15px; font-weight: 600; color: #005B94">Watch on YouTube →</span>
 </div>
 </a>
-<a class="alt-hov" href="https://www.youtube.com/watch?v=tO_H2SfIE0o" target="_blank" rel="noopener" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF">
+</div>
+<div class="alt-carousel-slide">
+<a class="alt-hov" href="#" data-video-modal="true" data-video-type="youtube" data-video-path="https://www.youtube.com/watch?v=tO_H2SfIE0o" data-video-title="Bhoom of Bharat: In Conversation with Nilesh Biniwale" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF; width: 100%;">
 <div style="height: 150px; background: #0077B3; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-sizing: border-box">
 <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #FFD200">Podcast · Bhoom of Bharat</span>
 <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="27" fill="#FFD200"></circle><path d="M23 18.5 L38 28 L23 37.5 Z" fill="#1E2229"></path></svg>
@@ -351,7 +389,9 @@
 <span style="margin-top: auto; padding-top: 6px; font-size: 15px; font-weight: 600; color: #005B94">Watch on YouTube →</span>
 </div>
 </a>
-<a class="alt-hov" href="https://www.youtube.com/results?search_query=%22Interview+with+Shri+Nilesh+Biniwale+%7C+IIM+Raipur%22" target="_blank" rel="noopener" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF">
+</div>
+<div class="alt-carousel-slide">
+<a class="alt-hov" href="https://www.youtube.com/results?search_query=%22Interview+with+Shri+Nilesh+Biniwale+%7C+IIM+Raipur%22" target="_blank" rel="noopener" style="border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; text-decoration: none; color: #1E2229; background: #FFFFFF; width: 100%;">
 <div style="height: 150px; background: #1E2229; display: flex; align-items: center; justify-content: space-between; padding: 0 24px; box-sizing: border-box">
 <span style="font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #FFD200">Interview · IIM Raipur</span>
 <svg aria-hidden="true" width="56" height="56" viewBox="0 0 56 56" fill="none"><circle cx="28" cy="28" r="27" fill="#FFD200"></circle><path d="M23 18.5 L38 28 L23 37.5 Z" fill="#1E2229"></path></svg>
@@ -362,6 +402,10 @@
 <span style="margin-top: auto; padding-top: 6px; font-size: 15px; font-weight: 600; color: #005B94">Watch on YouTube →</span>
 </div>
 </a>
+</div>
+</div>
+</div>
+<div class="alt-carousel-dots"></div>
 </div>
 </div>
 <form class="alt-form" id="newsletterForm" style="padding: 32px; border-radius: 14px; background: #F8FAFC; border: 1px solid #E2E8F0; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 20px" >
@@ -428,7 +472,10 @@
 
 </div>
 </div>
-<div style="border-top: 1px solid rgba(255, 255, 255, 0.25); padding-top: 24px; font-size: 14px; color: #DCEBF5">© 2026 Nilesh Biniwale and Nilesh Kulkarni. Published by Diamond Publications.</div>
+<div style="border-top: 1px solid rgba(255, 255, 255, 0.25); padding-top: 24px; font-size: 14px; color: #DCEBF5; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+<div>© 2026 Nilesh Biniwale and Nilesh Kulkarni. Published by Diamond Publications.</div>
+<div><a href="admin/login.php" style="color: #DCEBF5; text-decoration: none; font-size: 13px; opacity: 0.85;"><i class="fa-solid fa-lock" style="font-size: 11px;"></i> Admin Portal</a></div>
+</div>
 </div>
 </footer>
 
@@ -554,5 +601,6 @@ function showMessage(message, type) {
 }
 
 </script>
+<script src="js/carousel.js"></script>
 </body>
 </html>

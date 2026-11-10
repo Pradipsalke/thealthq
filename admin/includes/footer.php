@@ -1,0 +1,7 @@
+    </div><!-- /.admin-content -->
+</div><!-- /.admin-main -->
+
+<script src="js/admin.js"></script>
+</body>
+</html>
+

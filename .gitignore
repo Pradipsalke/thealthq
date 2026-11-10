@@ -2,3 +2,14 @@
 Thumbs.db
 *.zip
 .env
+
+# User uploaded media
+uploads/videos/*
+!uploads/videos/.gitkeep
+uploads/thumbnails/*
+!uploads/thumbnails/.gitkeep
+
+# Local tooling
+powershell.bat
+
+
