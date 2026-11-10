@@ -1,31 +1,41 @@
 /**
  * The ALT HQ - Carousel & Video Lightbox Engine
+ * With Auto-play and Dot Controls
  */
 
 (function () {
   'use strict';
 
+  window.altCarousels = [];
+
   class AltCarousel {
-    constructor(element) {
+    constructor(element, options = {}) {
       this.wrapper = element;
       this.viewport = element.querySelector('.alt-carousel-viewport');
       this.track = element.querySelector('.alt-carousel-track');
+      this.dotsContainer = element.querySelector('.alt-carousel-dots');
+
       this.btnPrev = element.querySelector('.alt-carousel-btn.alt-prev') ||
                      document.querySelector(`[data-target="${element.id}"].alt-prev`) ||
                      document.querySelector(`#${element.dataset.carousel}-carousel-nav .alt-prev`);
       this.btnNext = element.querySelector('.alt-carousel-btn.alt-next') ||
                      document.querySelector(`[data-target="${element.id}"].alt-next`) ||
                      document.querySelector(`#${element.dataset.carousel}-carousel-nav .alt-next`);
-      this.dotsContainer = element.querySelector('.alt-carousel-dots');
 
       this.currentIndex = 0;
       this.isDragging = false;
       this.startPos = 0;
       this.currentTranslate = 0;
       this.prevTranslate = 0;
-      this.animationID = null;
+      this.dragDistance = 0;
+
+      // Autoplay configuration: rotates smoothly every 4.5 seconds
+      this.autoplayDelay = options.autoplayDelay || 4500;
+      this.autoplayTimer = null;
+      this.isPaused = false;
 
       this.init();
+      window.altCarousels.push(this);
     }
 
     init() {
@@ -37,11 +47,13 @@
       this.updateLayout();
       this.buildDots();
       this.updateControls();
+      this.startAutoplay();
 
       window.addEventListener('resize', () => {
         this.updateLayout();
         this.buildDots();
         this.goToSlide(this.currentIndex, false);
+        this.restartAutoplay();
       });
     }
 
@@ -66,10 +78,20 @@
     }
 
     bindEvents() {
+      // Pause autoplay on mouse hover, resume on mouse leave
+      this.wrapper.addEventListener('mouseenter', () => {
+        this.isPaused = true;
+      });
+      this.wrapper.addEventListener('mouseleave', () => {
+        this.isPaused = false;
+      });
+
+      // Arrow buttons if present
       if (this.btnPrev) {
         this.btnPrev.addEventListener('click', (e) => {
           e.preventDefault();
           this.prev();
+          this.restartAutoplay();
         });
       }
 
@@ -77,6 +99,7 @@
         this.btnNext.addEventListener('click', (e) => {
           e.preventDefault();
           this.next();
+          this.restartAutoplay();
         });
       }
 
@@ -89,7 +112,7 @@
       window.addEventListener('mousemove', this.dragMove.bind(this));
       window.addEventListener('mouseup', this.dragEnd.bind(this));
 
-      // Prevent clicking links during a drag gesture
+      // Prevent link clicks during drag
       this.track.addEventListener('click', (e) => {
         if (this.dragDistance && Math.abs(this.dragDistance) > 10) {
           e.preventDefault();
@@ -113,17 +136,17 @@
       }
 
       this.dotsContainer.style.display = 'flex';
-      const visible = this.getVisibleCount();
-      const dotCount = Math.ceil(this.slides.length / visible);
+      const dotCount = maxIdx + 1;
 
       for (let i = 0; i < dotCount; i++) {
         const dot = document.createElement('button');
         dot.type = 'button';
-        dot.className = 'alt-carousel-dot' + (i === Math.floor(this.currentIndex / visible) ? ' active' : '');
-        dot.setAttribute('aria-label', `Go to slide page ${i + 1}`);
-        dot.addEventListener('click', () => {
-          const targetIndex = Math.min(i * visible, maxIdx);
-          this.goToSlide(targetIndex);
+        dot.className = 'alt-carousel-dot' + (i === this.currentIndex ? ' active' : '');
+        dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+        dot.addEventListener('click', (e) => {
+          e.preventDefault();
+          this.goToSlide(i);
+          this.restartAutoplay();
         });
         this.dotsContainer.appendChild(dot);
       }
@@ -139,26 +162,21 @@
         this.btnNext.disabled = this.currentIndex >= maxIdx;
       }
 
-      // Hide arrows if all items fit on screen
-      const shouldHide = this.slides.length <= this.getVisibleCount();
-      if (this.btnPrev && this.btnNext) {
-        this.btnPrev.style.display = shouldHide ? 'none' : 'inline-flex';
-        this.btnNext.style.display = shouldHide ? 'none' : 'inline-flex';
-      }
-
       if (this.dotsContainer) {
-        const visible = this.getVisibleCount();
-        const activePage = Math.floor(this.currentIndex / visible);
         const dots = this.dotsContainer.querySelectorAll('.alt-carousel-dot');
         dots.forEach((dot, idx) => {
-          dot.classList.toggle('active', idx === activePage);
+          dot.classList.toggle('active', idx === this.currentIndex);
         });
       }
     }
 
     goToSlide(index, animate = true) {
       const maxIdx = this.getMaxIndex();
-      this.currentIndex = Math.max(0, Math.min(index, maxIdx));
+      if (maxIdx <= 0) {
+        this.currentIndex = 0;
+      } else {
+        this.currentIndex = Math.max(0, Math.min(index, maxIdx));
+      }
 
       const slideWidth = this.getSlideWidth();
       this.currentTranslate = -this.currentIndex * slideWidth;
@@ -175,18 +193,58 @@
     }
 
     prev() {
-      const step = 1;
-      this.goToSlide(this.currentIndex - step);
+      const maxIdx = this.getMaxIndex();
+      if (this.currentIndex <= 0) {
+        this.goToSlide(maxIdx);
+      } else {
+        this.goToSlide(this.currentIndex - 1);
+      }
     }
 
     next() {
-      const step = 1;
-      this.goToSlide(this.currentIndex + step);
+      const maxIdx = this.getMaxIndex();
+      if (this.currentIndex >= maxIdx) {
+        this.goToSlide(0);
+      } else {
+        this.goToSlide(this.currentIndex + 1);
+      }
+    }
+
+    // Autoplay Methods
+    startAutoplay() {
+      this.stopAutoplay();
+      const maxIdx = this.getMaxIndex();
+      if (maxIdx <= 0) return;
+
+      this.autoplayTimer = setInterval(() => {
+        if (this.isPaused || this.isDragging) return;
+        const currentMax = this.getMaxIndex();
+        if (currentMax <= 0) return;
+
+        if (this.currentIndex >= currentMax) {
+          this.goToSlide(0);
+        } else {
+          this.goToSlide(this.currentIndex + 1);
+        }
+      }, this.autoplayDelay);
+    }
+
+    stopAutoplay() {
+      if (this.autoplayTimer) {
+        clearInterval(this.autoplayTimer);
+        this.autoplayTimer = null;
+      }
+    }
+
+    restartAutoplay() {
+      this.stopAutoplay();
+      this.startAutoplay();
     }
 
     // Drag / Touch Handlers
     dragStart(e) {
-      if (e.button !== 0) return; // primary mouse button only
+      if (e.button !== 0) return;
+      this.stopAutoplay();
       this.isDragging = true;
       this.startPos = e.pageX;
       this.dragDistance = 0;
@@ -216,9 +274,12 @@
       } else {
         this.goToSlide(this.currentIndex);
       }
+
+      this.startAutoplay();
     }
 
     touchStart(e) {
+      this.stopAutoplay();
       this.isDragging = true;
       this.startPos = e.touches[0].clientX;
       this.dragDistance = 0;
@@ -229,8 +290,7 @@
       if (!this.isDragging) return;
       const currentPosition = e.touches[0].clientX;
       this.dragDistance = currentPosition - this.startPos;
-      
-      // If moving horizontally, prevent default vertical scrolling
+
       if (Math.abs(this.dragDistance) > 10 && e.cancelable) {
         e.preventDefault();
       }
@@ -305,11 +365,13 @@
     open(type, url, title) {
       if (!this.modal) this.createModal();
 
+      // Pause all background carousels while video modal is active
+      window.altCarousels?.forEach((c) => c.stopAutoplay());
+
       this.titleEl.textContent = title;
       this.container.innerHTML = '';
 
-      if (type === 'upload' || (url.match(/\.(mp4|webm|ogg|mov)$/i))) {
-        // Uploaded or direct video file
+      if (type === 'upload' || url.match(/\.(mp4|webm|ogg|mov)$/i)) {
         const video = document.createElement('video');
         video.src = url;
         video.controls = true;
@@ -318,7 +380,6 @@
         this.container.appendChild(video);
         this.linkEl.style.display = 'none';
       } else {
-        // YouTube or external URL
         const ytId = this.extractYouTubeId(url);
         if (ytId) {
           const iframe = document.createElement('iframe');
@@ -330,8 +391,8 @@
           this.linkEl.textContent = 'Watch on YouTube ↗';
           this.linkEl.style.display = 'inline-flex';
         } else {
-          // If search link or other site, fallback to external window or iframe
           window.open(url, '_blank', 'noopener');
+          window.altCarousels?.forEach((c) => c.startAutoplay());
           return;
         }
       }
@@ -351,20 +412,23 @@
       this.modal.classList.remove('active');
       document.body.style.overflow = '';
       this.container.innerHTML = '';
+
+      // Resume all carousels
+      window.altCarousels?.forEach((c) => c.startAutoplay());
     }
   };
 
-  // Dynamic Content Loader for Frontend (if rendering via JS)
+  // Dynamic Content Loader for Frontend (fallback if track empty)
   const DynamicLoader = {
     async loadInsights(carouselEl) {
       const track = carouselEl.querySelector('.alt-carousel-track');
-      if (!track || track.children.length > 0) return; // already rendered by PHP
+      if (!track || track.children.length > 0) return;
 
       try {
         const res = await fetch('api/get_insights.php');
         const json = await res.json();
         if (json.status === 'success' && json.data.length > 0) {
-          track.innerHTML = json.data.map(item => this.renderInsightCard(item)).join('');
+          track.innerHTML = json.data.map((item) => this.renderInsightCard(item)).join('');
           new AltCarousel(carouselEl);
         }
       } catch (err) {
@@ -374,13 +438,13 @@
 
     async loadVideos(carouselEl) {
       const track = carouselEl.querySelector('.alt-carousel-track');
-      if (!track || track.children.length > 0) return; // already rendered by PHP
+      if (!track || track.children.length > 0) return;
 
       try {
         const res = await fetch('api/get_videos.php');
         const json = await res.json();
         if (json.status === 'success' && json.data.length > 0) {
-          track.innerHTML = json.data.map(item => this.renderVideoCard(item)).join('');
+          track.innerHTML = json.data.map((item) => this.renderVideoCard(item)).join('');
           new AltCarousel(carouselEl);
         }
       } catch (err) {
@@ -412,10 +476,12 @@
       const isUpload = item.video_type === 'upload';
       const isYtDirect = item.video_path.includes('youtube.com/watch') || item.video_path.includes('youtu.be/');
       const useModal = isUpload || isYtDirect;
-      
-      const modalAttrs = useModal ? `data-video-modal="true" data-video-type="${this.escapeHtml(item.video_type)}" data-video-path="${this.escapeHtml(item.video_path)}" data-video-title="${this.escapeHtml(item.title)}"` : '';
+
+      const modalAttrs = useModal
+        ? `data-video-modal="true" data-video-type="${this.escapeHtml(item.video_type)}" data-video-path="${this.escapeHtml(item.video_path)}" data-video-title="${this.escapeHtml(item.title)}"`
+        : '';
       const href = useModal ? '#' : this.escapeHtml(item.video_path);
-      const targetAttr = (!useModal) ? 'target="_blank" rel="noopener"' : '';
+      const targetAttr = !useModal ? 'target="_blank" rel="noopener"' : '';
 
       const bannerStyle = item.thumbnail_path
         ? `background-image: url('${this.escapeHtml(item.thumbnail_path)}');`
@@ -450,19 +516,17 @@
     }
   };
 
-  // Initialize all carousels & video lightboxes on DOMContentLoaded
+  // Initialize on DOM ready
   document.addEventListener('DOMContentLoaded', () => {
     VideoLightbox.init();
 
     document.querySelectorAll('[data-carousel]').forEach((el) => {
       const type = el.dataset.carousel;
       const track = el.querySelector('.alt-carousel-track');
-      
-      // If server already rendered children, instantiate carousel right away
+
       if (track && track.children.length > 0) {
         new AltCarousel(el);
       } else {
-        // Fetch from API dynamically
         if (type === 'insights') {
           DynamicLoader.loadInsights(el);
         } else if (type === 'videos') {
@@ -475,4 +539,3 @@
   window.AltCarousel = AltCarousel;
   window.VideoLightbox = VideoLightbox;
 })();
-

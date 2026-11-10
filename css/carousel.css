@@ -90,34 +90,42 @@
   outline-offset: 2px;
 }
 
-/* Dots Indicator */
+/* Dots Indicator Controls */
 .alt-carousel-dots {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  margin-top: 24px;
+  gap: 10px;
+  margin-top: 28px;
+  padding: 6px 0;
 }
 
 .alt-carousel-dot {
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   border: none;
   background: #CBD5E1;
   cursor: pointer;
   padding: 0;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-sizing: border-box;
 }
 
 .alt-carousel-dot:hover {
   background: #0088CC;
+  transform: scale(1.2);
 }
 
 .alt-carousel-dot.active {
-  width: 28px;
+  width: 32px;
   border-radius: 999px;
   background: #005B94;
+}
+
+.alt-carousel-dot:focus-visible {
+  outline: 3px solid #FFD200;
+  outline-offset: 2px;
 }
 
 /* Video Card Thumbnail Overlay */

@@ -383,17 +383,7 @@ try {
 <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #005B94">Insights</span>
 <h2 class="alt-h2" style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 40px; line-height: 1.15">Ideas beyond the book</h2>
 </div>
-<div style="display: flex; align-items: center; gap: 16px">
 <a href="#insights" style="font-weight: 600; font-size: 15px">All articles →</a>
-<div class="alt-carousel-nav" id="insights-carousel-nav">
-<button type="button" class="alt-carousel-btn alt-prev" aria-label="Previous insight" title="Previous">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-</button>
-<button type="button" class="alt-carousel-btn alt-next" aria-label="Next insight" title="Next">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-</button>
-</div>
-</div>
 </div>
 
 <div class="alt-carousel-wrapper" data-carousel="insights" id="insights-carousel">
@@ -429,14 +419,6 @@ try {
 <div style="display: flex; flex-direction: column; gap: 8px">
 <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #005B94">Watch and listen</span>
 <h3 style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 28px; line-height: 1.2">Conversations on building GCCs that lead</h3>
-</div>
-<div class="alt-carousel-nav" id="videos-carousel-nav">
-<button type="button" class="alt-carousel-btn alt-prev" aria-label="Previous video" title="Previous">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-</button>
-<button type="button" class="alt-carousel-btn alt-next" aria-label="Next video" title="Next">
-<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-</button>
 </div>
 </div>
 
