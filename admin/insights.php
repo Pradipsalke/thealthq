@@ -796,26 +796,12 @@ require_once __DIR__ . '/includes/header.php';
         <div class="admin-card-header">
             <div>
                 <div class="admin-card-title">All Insights Articles (<?= count($insights) ?>)</div>
-                <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">Click any table heading to sort instantly, or use the controls below.</div>
+                <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">Click any table heading to sort by column.</div>
             </div>
-            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                <div class="table-sort-control">
-                    <i class="fa-solid fa-arrow-down-a-z" style="color: var(--primary);"></i>
-                    <span style="font-size: 12px; font-weight: 700; color: var(--slate); text-transform: uppercase;">Sort:</span>
-                    <select class="table-sort-select" onchange="triggerHeadingSort(this.value, this)" title="Choose sorting order">
-                        <option value="order-asc" <?= ($sort === 'order' && $dir === 'asc') ? 'selected' : '' ?>>Order (1 → 9)</option>
-                        <option value="order-desc" <?= ($sort === 'order' && $dir === 'desc') ? 'selected' : '' ?>>Order (9 → 1)</option>
-                        <option value="title-asc" <?= ($sort === 'title' && $dir === 'asc') ? 'selected' : '' ?>>Title (A → Z)</option>
-                        <option value="title-desc" <?= ($sort === 'title' && $dir === 'desc') ? 'selected' : '' ?>>Title (Z → A)</option>
-                        <option value="type-asc" <?= ($sort === 'type' && $dir === 'asc') ? 'selected' : '' ?>>Type (Internal / External)</option>
-                        <option value="status-desc" <?= ($sort === 'status' && $dir === 'desc') ? 'selected' : '' ?>>Active Status First</option>
-                    </select>
-                </div>
-                <a href="insights.php?action=add" class="btn-primary">
-                    <i class="fa-solid fa-plus"></i>
-                    <span>Add New Insight</span>
-                </a>
-            </div>
+            <a href="insights.php?action=add" class="btn-primary">
+                <i class="fa-solid fa-plus"></i>
+                <span>Add New Insight</span>
+            </a>
         </div>
         <div style="overflow-x: auto;">
             <table class="admin-table">

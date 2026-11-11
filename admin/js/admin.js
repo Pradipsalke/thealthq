@@ -148,40 +148,4 @@ function executeTableSort(table, tbody, headers, activeTh, colIndex, sortKey, di
         url.searchParams.set('dir', dir);
         window.history.replaceState({}, '', url);
     }
-
-    // Sync select dropdown if present
-    const card = table.closest('.admin-card');
-    if (card) {
-        const select = card.querySelector('.table-sort-select');
-        if (select) {
-            select.value = `${sortKey}-${dir}`;
-        }
-    }
-}
-
-/**
- * Triggers sort when user selects an option in the table header dropdown
- */
-function triggerHeadingSort(val, selectEl) {
-    if (!val) return;
-    const parts = val.split('-');
-    const dir = parts.pop();
-    const sortKey = parts.join('-');
-
-    const card = selectEl.closest('.admin-card');
-    if (!card) return;
-
-    const table = card.querySelector('.admin-table');
-    if (!table) return;
-
-    const thead = table.querySelector('thead');
-    const tbody = table.querySelector('tbody');
-    const headers = thead ? thead.querySelectorAll('th.sortable') : [];
-
-    const targetTh = Array.from(headers).find(th => th.dataset.sort === sortKey);
-    if (targetTh) {
-        const colIndex = Array.from(targetTh.parentNode.children).indexOf(targetTh);
-        const sortType = targetTh.dataset.sortType || 'text';
-        executeTableSort(table, tbody, headers, targetTh, colIndex, sortKey, dir, sortType);
-    }
 }
