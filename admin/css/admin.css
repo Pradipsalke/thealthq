@@ -353,6 +353,72 @@ body {
     background: #FBFDFE;
 }
 
+/* Table Column Sorting on Headings */
+.admin-table th.sortable {
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease, color 0.15s ease;
+    white-space: nowrap;
+}
+
+.admin-table th.sortable:hover {
+    background: #EFF6FF;
+    color: var(--primary);
+}
+
+.th-sort-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.th-sort-icon {
+    font-size: 11px;
+    color: #94A3B8;
+    transition: color 0.15s, transform 0.15s;
+    display: inline-flex;
+    align-items: center;
+}
+
+.admin-table th.sortable:hover .th-sort-icon {
+    color: var(--primary);
+}
+
+.admin-table th.sort-asc,
+.admin-table th.sort-desc {
+    background: #E8F3FA;
+    color: var(--primary);
+    border-bottom: 2px solid var(--primary);
+}
+
+.admin-table th.sort-asc .th-sort-icon,
+.admin-table th.sort-desc .th-sort-icon {
+    color: var(--primary);
+    font-weight: 900;
+}
+
+.table-sort-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #F8FAFC;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--charcoal);
+}
+
+.table-sort-select {
+    background: transparent;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    cursor: pointer;
+    outline: none;
+}
+
 /* Buttons */
 .btn-primary {
     display: inline-flex;

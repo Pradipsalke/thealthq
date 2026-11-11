@@ -72,12 +72,32 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th style="width: 60px;">Order</th>
-                    <th>Title & Category</th>
-                    <th>Headline</th>
+                    <th style="width: 80px;" class="sortable" data-sort="order" data-sort-type="number" title="Click to sort by order">
+                        <span class="th-sort-content">
+                            <span>Order</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th class="sortable" data-sort="title" data-sort-type="text" title="Click to sort by title">
+                        <span class="th-sort-content">
+                            <span>Title & Category</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th class="sortable" data-sort="headline" data-sort-type="text" title="Click to sort by headline">
+                        <span class="th-sort-content">
+                            <span>Headline</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
                     <th>Link Target</th>
-                    <th>Status</th>
-                    <th style="width: 120px;">Actions</th>
+                    <th style="width: 100px;" class="sortable" data-sort="status" data-sort-type="number" title="Click to sort by status">
+                        <span class="th-sort-content">
+                            <span>Status</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th style="width: 100px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -92,8 +112,8 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
                         $viewUrl = $isExt ? $item['link_url'] : ('../' . $item['link_url']);
                         ?>
                         <tr>
-                            <td><span style="font-weight: 700; color: #005B94;">#<?= $item['display_order'] ?></span></td>
-                            <td>
+                            <td data-sort-val="<?= $item['display_order'] ?>"><span style="font-weight: 700; color: #005B94;">#<?= $item['display_order'] ?></span></td>
+                            <td data-sort-val="<?= htmlspecialchars($item['title']) ?>">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <span style="display: inline-block; width: 14px; height: 14px; border-radius: 3px; background: <?= htmlspecialchars($item['banner_bg']) ?>; border: 1px solid rgba(0,0,0,0.1);"></span>
                                     <div>
@@ -102,14 +122,14 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
                                     </div>
                                 </div>
                             </td>
-                            <td style="max-width: 320px;"><?= htmlspecialchars($item['headline']) ?></td>
+                            <td data-sort-val="<?= htmlspecialchars($item['headline']) ?>" style="max-width: 320px;"><?= htmlspecialchars($item['headline']) ?></td>
                             <td>
                                 <a href="<?= htmlspecialchars($viewUrl) ?>" target="_blank" rel="noopener" style="color: #005B94; font-size: 13px; text-decoration: none;">
                                     <?= htmlspecialchars($item['link_text'] ?? ($isExt ? 'View external ↗' : 'View article →')) ?>
                                     <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 11px;"></i>
                                 </a>
                             </td>
-                            <td>
+                            <td data-sort-val="<?= $item['is_active'] ?>">
                                 <span class="badge-status <?= $item['is_active'] ? 'active' : 'inactive' ?>">
                                     <i class="fa-solid fa-circle" style="font-size: 7px;"></i>
                                     <?= $item['is_active'] ? 'Active' : 'Inactive' ?>
@@ -139,12 +159,37 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
         <table class="admin-table">
             <thead>
                 <tr>
-                    <th style="width: 60px;">Order</th>
-                    <th>Type</th>
-                    <th>Title & Speaker</th>
-                    <th>Badge / Series</th>
-                    <th>Status</th>
-                    <th style="width: 120px;">Actions</th>
+                    <th style="width: 80px;" class="sortable" data-sort="order" data-sort-type="number" title="Click to sort by order">
+                        <span class="th-sort-content">
+                            <span>Order</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th class="sortable" data-sort="type" data-sort-type="text" title="Click to sort by source">
+                        <span class="th-sort-content">
+                            <span>Type</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th class="sortable" data-sort="title" data-sort-type="text" title="Click to sort by title">
+                        <span class="th-sort-content">
+                            <span>Title & Speaker</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th class="sortable" data-sort="badge" data-sort-type="text" title="Click to sort by badge">
+                        <span class="th-sort-content">
+                            <span>Badge / Series</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th style="width: 100px;" class="sortable" data-sort="status" data-sort-type="number" title="Click to sort by status">
+                        <span class="th-sort-content">
+                            <span>Status</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th style="width: 100px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -155,8 +200,8 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
                 <?php else: ?>
                     <?php foreach ($recentVideos as $item): ?>
                         <tr>
-                            <td><span style="font-weight: 700; color: #005B94;">#<?= $item['display_order'] ?></span></td>
-                            <td>
+                            <td data-sort-val="<?= $item['display_order'] ?>"><span style="font-weight: 700; color: #005B94;">#<?= $item['display_order'] ?></span></td>
+                            <td data-sort-val="<?= $item['video_type'] === 'upload' ? 'Upload' : 'YouTube' ?>">
                                 <?php if ($item['video_type'] === 'upload'): ?>
                                     <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; background: #D1FAE5; color: #065F46; font-size: 12px; font-weight: 600;">
                                         <i class="fa-solid fa-file-video"></i> Uploaded
@@ -167,12 +212,12 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
                                     </span>
                                 <?php endif; ?>
                             </td>
-                            <td>
+                            <td data-sort-val="<?= htmlspecialchars($item['title']) ?>">
                                 <div style="font-weight: 700;"><?= htmlspecialchars($item['title']) ?></div>
                                 <div style="font-size: 12px; color: #64748B;"><?= htmlspecialchars($item['meta_info']) ?></div>
                             </td>
-                            <td><span style="font-size: 13px; font-weight: 600; color: #005B94;"><?= htmlspecialchars($item['badge']) ?></span></td>
-                            <td>
+                            <td data-sort-val="<?= htmlspecialchars($item['badge']) ?>"><span style="font-size: 13px; font-weight: 600; color: #005B94;"><?= htmlspecialchars($item['badge']) ?></span></td>
+                            <td data-sort-val="<?= $item['is_active'] ?>">
                                 <span class="badge-status <?= $item['is_active'] ? 'active' : 'inactive' ?>">
                                     <i class="fa-solid fa-circle" style="font-size: 7px;"></i>
                                     <?= $item['is_active'] ? 'Active' : 'Inactive' ?>

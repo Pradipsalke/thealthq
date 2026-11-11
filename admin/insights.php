@@ -267,8 +267,28 @@ if ($action === 'edit' && $id > 0) {
     }
 }
 
+// Server-side sorting whitelist
+$allowedSorts = [
+    'order'    => 'display_order',
+    'title'    => 'title',
+    'type'     => 'insight_type',
+    'category' => 'category',
+    'headline' => 'headline',
+    'status'   => 'is_active'
+];
+$sort = $_GET['sort'] ?? 'order';
+$dir = strtolower($_GET['dir'] ?? 'asc');
+if (!array_key_exists($sort, $allowedSorts)) {
+    $sort = 'order';
+}
+if (!in_array($dir, ['asc', 'desc'])) {
+    $dir = 'asc';
+}
+$orderCol = $allowedSorts[$sort];
+$orderDir = strtoupper($dir);
+
 // Fetch all insights
-$insights = $db->query("SELECT * FROM insights ORDER BY display_order ASC, id ASC")->fetchAll();
+$insights = $db->query("SELECT * FROM insights ORDER BY {$orderCol} {$orderDir}, id ASC")->fetchAll();
 
 require_once __DIR__ . '/includes/header.php';
 ?>
@@ -776,23 +796,72 @@ require_once __DIR__ . '/includes/header.php';
         <div class="admin-card-header">
             <div>
                 <div class="admin-card-title">All Insights Articles (<?= count($insights) ?>)</div>
-                <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">Manage dynamic blog posts and external links for the homepage carousel.</div>
+                <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">Click any table heading to sort instantly, or use the controls below.</div>
             </div>
-            <a href="insights.php?action=add" class="btn-primary">
-                <i class="fa-solid fa-plus"></i>
-                <span>Add New Insight</span>
-            </a>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <div class="table-sort-control">
+                    <i class="fa-solid fa-arrow-down-a-z" style="color: var(--primary);"></i>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--slate); text-transform: uppercase;">Sort:</span>
+                    <select class="table-sort-select" onchange="triggerHeadingSort(this.value, this)" title="Choose sorting order">
+                        <option value="order-asc" <?= ($sort === 'order' && $dir === 'asc') ? 'selected' : '' ?>>Order (1 → 9)</option>
+                        <option value="order-desc" <?= ($sort === 'order' && $dir === 'desc') ? 'selected' : '' ?>>Order (9 → 1)</option>
+                        <option value="title-asc" <?= ($sort === 'title' && $dir === 'asc') ? 'selected' : '' ?>>Title (A → Z)</option>
+                        <option value="title-desc" <?= ($sort === 'title' && $dir === 'desc') ? 'selected' : '' ?>>Title (Z → A)</option>
+                        <option value="type-asc" <?= ($sort === 'type' && $dir === 'asc') ? 'selected' : '' ?>>Type (Internal / External)</option>
+                        <option value="status-desc" <?= ($sort === 'status' && $dir === 'desc') ? 'selected' : '' ?>>Active Status First</option>
+                    </select>
+                </div>
+                <a href="insights.php?action=add" class="btn-primary">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add New Insight</span>
+                </a>
+            </div>
         </div>
         <div style="overflow-x: auto;">
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th style="width: 80px;">Order</th>
-                        <th>Banner Card</th>
-                        <th>Type</th>
-                        <th>Title & Destination</th>
-                        <th>Headline</th>
-                        <th>Status</th>
+                        <th style="width: 100px;" class="sortable <?= $sort === 'order' ? 'sort-' . $dir : '' ?>" data-sort="order" data-sort-type="number" title="Click to sort by carousel order">
+                            <span class="th-sort-content">
+                                <span>Order</span>
+                                <span class="th-sort-icon">
+                                    <i class="fa-solid <?= $sort === 'order' ? ($dir === 'asc' ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short') : 'fa-sort' ?>"></i>
+                                </span>
+                            </span>
+                        </th>
+                        <th style="width: 150px;">Banner Card</th>
+                        <th class="sortable <?= $sort === 'type' ? 'sort-' . $dir : '' ?>" data-sort="type" data-sort-type="text" title="Click to sort by article type">
+                            <span class="th-sort-content">
+                                <span>Type</span>
+                                <span class="th-sort-icon">
+                                    <i class="fa-solid <?= $sort === 'type' ? ($dir === 'asc' ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short') : 'fa-sort' ?>"></i>
+                                </span>
+                            </span>
+                        </th>
+                        <th class="sortable <?= $sort === 'title' ? 'sort-' . $dir : '' ?>" data-sort="title" data-sort-type="text" title="Click to sort by title">
+                            <span class="th-sort-content">
+                                <span>Title & Destination</span>
+                                <span class="th-sort-icon">
+                                    <i class="fa-solid <?= $sort === 'title' ? ($dir === 'asc' ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short') : 'fa-sort' ?>"></i>
+                                </span>
+                            </span>
+                        </th>
+                        <th class="sortable <?= $sort === 'headline' ? 'sort-' . $dir : '' ?>" data-sort="headline" data-sort-type="text" title="Click to sort by headline">
+                            <span class="th-sort-content">
+                                <span>Headline</span>
+                                <span class="th-sort-icon">
+                                    <i class="fa-solid <?= $sort === 'headline' ? ($dir === 'asc' ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short') : 'fa-sort' ?>"></i>
+                                </span>
+                            </span>
+                        </th>
+                        <th style="width: 110px;" class="sortable <?= $sort === 'status' ? 'sort-' . $dir : '' ?>" data-sort="status" data-sort-type="number" title="Click to sort by status">
+                            <span class="th-sort-content">
+                                <span>Status</span>
+                                <span class="th-sort-icon">
+                                    <i class="fa-solid <?= $sort === 'status' ? ($dir === 'asc' ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short') : 'fa-sort' ?>"></i>
+                                </span>
+                            </span>
+                        </th>
                         <th style="width: 140px; text-align: right;">Actions</th>
                     </tr>
                 </thead>
@@ -808,7 +877,7 @@ require_once __DIR__ . '/includes/header.php';
                             $viewUrl = $isExt ? $item['link_url'] : ('../' . $item['link_url']);
                             ?>
                             <tr>
-                                <td>
+                                <td data-sort-val="<?= $item['display_order'] ?>">
                                     <div style="display: flex; align-items: center; gap: 4px;">
                                         <form method="POST" action="insights.php" style="display: inline;">
                                             <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
@@ -837,7 +906,7 @@ require_once __DIR__ . '/includes/header.php';
                                         <span style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 11px; line-height: 1.1; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;"><?= htmlspecialchars($item['title']) ?></span>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-sort-val="<?= $isExt ? 'External' : 'Internal' ?>">
                                     <?php if ($isExt): ?>
                                         <span class="badge-type external">
                                             <i class="fa-solid fa-arrow-up-right-from-square"></i> External
@@ -848,7 +917,7 @@ require_once __DIR__ . '/includes/header.php';
                                         </span>
                                     <?php endif; ?>
                                 </td>
-                                <td>
+                                <td data-sort-val="<?= htmlspecialchars($item['title']) ?>">
                                     <div style="font-weight: 700; font-size: 15px; color: var(--charcoal);"><?= htmlspecialchars($item['title']) ?></div>
                                     <div style="display: flex; align-items: center; gap: 8px; margin-top: 3px;">
                                         <span style="font-size: 12px; font-weight: 600; color: #005B94;"><?= htmlspecialchars($item['category']) ?></span>
@@ -858,11 +927,11 @@ require_once __DIR__ . '/includes/header.php';
                                         </a>
                                     </div>
                                 </td>
-                                <td style="max-width: 300px;">
+                                <td data-sort-val="<?= htmlspecialchars($item['headline']) ?>" style="max-width: 300px;">
                                     <div style="line-height: 1.35; font-size: 13px;"><?= htmlspecialchars($item['headline']) ?></div>
                                     <div style="font-size: 11px; color: #64748B; margin-top: 3px;"><?= htmlspecialchars($item['description']) ?></div>
                                 </td>
-                                <td>
+                                <td data-sort-val="<?= $item['is_active'] ?>">
                                     <form method="POST" action="insights.php" style="display: inline;">
                                         <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                                         <input type="hidden" name="post_action" value="toggle_status">

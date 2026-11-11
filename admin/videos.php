@@ -235,8 +235,27 @@ if ($action === 'edit' && $id > 0) {
     }
 }
 
+// Server-side sorting whitelist
+$allowedSorts = [
+    'order'  => 'display_order',
+    'title'  => 'title',
+    'type'   => 'video_type',
+    'badge'  => 'badge',
+    'status' => 'is_active'
+];
+$sort = $_GET['sort'] ?? 'order';
+$dir = strtolower($_GET['dir'] ?? 'asc');
+if (!array_key_exists($sort, $allowedSorts)) {
+    $sort = 'order';
+}
+if (!in_array($dir, ['asc', 'desc'])) {
+    $dir = 'asc';
+}
+$orderCol = $allowedSorts[$sort];
+$orderDir = strtoupper($dir);
+
 // Fetch all videos
-$videos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id ASC")->fetchAll();
+$videos = $db->query("SELECT * FROM videos ORDER BY {$orderCol} {$orderDir}, id ASC")->fetchAll();
 
 require_once __DIR__ . '/includes/header.php';
 ?>
@@ -413,23 +432,73 @@ require_once __DIR__ . '/includes/header.php';
         <div class="admin-card-header">
             <div>
                 <div class="admin-card-title">All Videos (<?= count($videos) ?>)</div>
-                <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">Manage video cards displayed in the "Watch and listen" carousel section.</div>
+                <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">Click any table heading to sort instantly, or use the controls below.</div>
             </div>
-            <a href="videos.php?action=add" class="btn-accent">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <span>Upload / Add Video</span>
-            </a>
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <div class="table-sort-control">
+                    <i class="fa-solid fa-arrow-down-a-z" style="color: var(--primary);"></i>
+                    <span style="font-size: 12px; font-weight: 700; color: var(--slate); text-transform: uppercase;">Sort:</span>
+                    <select class="table-sort-select" onchange="triggerHeadingSort(this.value, this)" title="Choose sorting order">
+                        <option value="order-asc" <?= ($sort === 'order' && $dir === 'asc') ? 'selected' : '' ?>>Order (1 → 9)</option>
+                        <option value="order-desc" <?= ($sort === 'order' && $dir === 'desc') ? 'selected' : '' ?>>Order (9 → 1)</option>
+                        <option value="title-asc" <?= ($sort === 'title' && $dir === 'asc') ? 'selected' : '' ?>>Title (A → Z)</option>
+                        <option value="title-desc" <?= ($sort === 'title' && $dir === 'desc') ? 'selected' : '' ?>>Title (Z → A)</option>
+                        <option value="type-asc" <?= ($sort === 'type' && $dir === 'asc') ? 'selected' : '' ?>>Source / Type</option>
+                        <option value="badge-asc" <?= ($sort === 'badge' && $dir === 'asc') ? 'selected' : '' ?>>Badge / Series</option>
+                        <option value="status-desc" <?= ($sort === 'status' && $dir === 'desc') ? 'selected' : '' ?>>Active Status First</option>
+                    </select>
+                </div>
+                <a href="videos.php?action=add" class="btn-accent">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <span>Upload / Add Video</span>
+                </a>
+            </div>
         </div>
         <div style="overflow-x: auto;">
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th style="width: 80px;">Order</th>
-                        <th>Preview</th>
-                        <th>Title & Speaker</th>
-                        <th>Source / Type</th>
-                        <th>Badge / Show</th>
-                        <th>Status</th>
+                        <th style="width: 100px;" class="sortable <?= $sort === 'order' ? 'sort-' . $dir : '' ?>" data-sort="order" data-sort-type="number" title="Click to sort by order">
+                            <span class="th-sort-content">
+                                <span>Order</span>
+                                <span class="th-sort-icon">
+                                    <i class="fa-solid <?= $sort === 'order' ? ($dir === 'asc' ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short') : 'fa-sort' ?>"></i>
+                                </span>
+                            </span>
+                        </th>
+                        <th style="width: 130px;">Preview</th>
+                        <th class="sortable <?= $sort === 'title' ? 'sort-' . $dir : '' ?>" data-sort="title" data-sort-type="text" title="Click to sort by title">
+                            <span class="th-sort-content">
+                                <span>Title & Speaker</span>
+                                <span class="th-sort-icon">
+                                    <i class="fa-solid <?= $sort === 'title' ? ($dir === 'asc' ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short') : 'fa-sort' ?>"></i>
+                                </span>
+                            </span>
+                        </th>
+                        <th class="sortable <?= $sort === 'type' ? 'sort-' . $dir : '' ?>" data-sort="type" data-sort-type="text" title="Click to sort by type">
+                            <span class="th-sort-content">
+                                <span>Source / Type</span>
+                                <span class="th-sort-icon">
+                                    <i class="fa-solid <?= $sort === 'type' ? ($dir === 'asc' ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short') : 'fa-sort' ?>"></i>
+                                </span>
+                            </span>
+                        </th>
+                        <th class="sortable <?= $sort === 'badge' ? 'sort-' . $dir : '' ?>" data-sort="badge" data-sort-type="text" title="Click to sort by badge">
+                            <span class="th-sort-content">
+                                <span>Badge / Show</span>
+                                <span class="th-sort-icon">
+                                    <i class="fa-solid <?= $sort === 'badge' ? ($dir === 'asc' ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short') : 'fa-sort' ?>"></i>
+                                </span>
+                            </span>
+                        </th>
+                        <th style="width: 110px;" class="sortable <?= $sort === 'status' ? 'sort-' . $dir : '' ?>" data-sort="status" data-sort-type="number" title="Click to sort by status">
+                            <span class="th-sort-content">
+                                <span>Status</span>
+                                <span class="th-sort-icon">
+                                    <i class="fa-solid <?= $sort === 'status' ? ($dir === 'asc' ? 'fa-arrow-up-wide-short' : 'fa-arrow-down-wide-short') : 'fa-sort' ?>"></i>
+                                </span>
+                            </span>
+                        </th>
                         <th style="width: 180px; text-align: right;">Actions</th>
                     </tr>
                 </thead>
@@ -441,7 +510,7 @@ require_once __DIR__ . '/includes/header.php';
                     <?php else: ?>
                         <?php foreach ($videos as $index => $item): ?>
                             <tr>
-                                <td>
+                                <td data-sort-val="<?= $item['display_order'] ?>">
                                     <div style="display: flex; align-items: center; gap: 4px;">
                                         <form method="POST" action="videos.php" style="display: inline;">
                                             <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
@@ -471,11 +540,11 @@ require_once __DIR__ . '/includes/header.php';
                                         </div>
                                     </div>
                                 </td>
-                                <td>
+                                <td data-sort-val="<?= htmlspecialchars($item['title']) ?>">
                                     <div style="font-weight: 700; font-size: 14px; max-width: 280px;"><?= htmlspecialchars($item['title']) ?></div>
                                     <div style="font-size: 12px; color: #64748B; margin-top: 3px;"><?= htmlspecialchars($item['meta_info']) ?></div>
                                 </td>
-                                <td>
+                                <td data-sort-val="<?= $item['video_type'] === 'upload' ? 'Upload' : 'YouTube' ?>">
                                     <?php if ($item['video_type'] === 'upload'): ?>
                                         <span style="display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 6px; background: #D1FAE5; color: #065F46; font-size: 12px; font-weight: 600;">
                                             <i class="fa-solid fa-cloud-arrow-up"></i> Uploaded MP4
@@ -486,10 +555,10 @@ require_once __DIR__ . '/includes/header.php';
                                         </span>
                                     <?php endif; ?>
                                 </td>
-                                <td>
+                                <td data-sort-val="<?= htmlspecialchars($item['badge']) ?>">
                                     <span style="font-size: 13px; font-weight: 600; color: #005B94;"><?= htmlspecialchars($item['badge']) ?></span>
                                 </td>
-                                <td>
+                                <td data-sort-val="<?= $item['is_active'] ?>">
                                     <form method="POST" action="videos.php" style="display: inline;">
                                         <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                                         <input type="hidden" name="post_action" value="toggle_status">
