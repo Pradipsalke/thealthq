@@ -458,7 +458,7 @@ require_once __DIR__ . '/includes/header.php';
             <table class="admin-table">
                 <thead>
                     <tr>
-                        <th style="width: 100px;" class="sortable <?= $sort === 'order' ? 'sort-' . $dir : '' ?>" data-sort="order" data-sort-type="number" title="Click to sort by order">
+                        <th style="width: 80px;" class="sortable <?= $sort === 'order' ? 'sort-' . $dir : '' ?>" data-sort="order" data-sort-type="number" title="Click to sort by order">
                             <span class="th-sort-content">
                                 <span>Order</span>
                                 <span class="th-sort-icon">
@@ -511,27 +511,7 @@ require_once __DIR__ . '/includes/header.php';
                         <?php foreach ($videos as $index => $item): ?>
                             <tr>
                                 <td data-sort-val="<?= $item['display_order'] ?>">
-                                    <div style="display: flex; align-items: center; gap: 4px;">
-                                        <form method="POST" action="videos.php" style="display: inline;">
-                                            <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
-                                            <input type="hidden" name="post_action" value="move">
-                                            <input type="hidden" name="move_id" value="<?= $item['id'] ?>">
-                                            <input type="hidden" name="direction" value="up">
-                                            <button type="submit" class="btn-icon" style="width: 26px; height: 26px;" <?= $index === 0 ? 'disabled style="opacity: 0.3;"' : '' ?> title="Move Up">
-                                                <i class="fa-solid fa-chevron-up" style="font-size: 10px;"></i>
-                                            </button>
-                                        </form>
-                                        <form method="POST" action="videos.php" style="display: inline;">
-                                            <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
-                                            <input type="hidden" name="post_action" value="move">
-                                            <input type="hidden" name="move_id" value="<?= $item['id'] ?>">
-                                            <input type="hidden" name="direction" value="down">
-                                            <button type="submit" class="btn-icon" style="width: 26px; height: 26px;" <?= $index === count($videos) - 1 ? 'disabled style="opacity: 0.3;"' : '' ?> title="Move Down">
-                                                <i class="fa-solid fa-chevron-down" style="font-size: 10px;"></i>
-                                            </button>
-                                        </form>
-                                        <span style="font-weight: 700; margin-left: 4px;"><?= $item['display_order'] ?></span>
-                                    </div>
+                                    <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 32px; padding: 0 8px; border-radius: 8px; background: #E6F3FA; color: #005B94; font-weight: 800; font-size: 13px;">#<?= $item['display_order'] ?></span>
                                 </td>
                                 <td>
                                     <div onclick="previewVideo('<?= htmlspecialchars($item['video_type']) ?>', '<?= htmlspecialchars($item['video_type'] === 'upload' ? '../' . $item['video_path'] : $item['video_path']) ?>', '<?= addslashes(htmlspecialchars($item['title'])) ?>')" style="width: 110px; height: 60px; border-radius: 6px; <?= !empty($item['thumbnail_path']) ? "background-image: url('../" . htmlspecialchars($item['thumbnail_path']) . "'); background-size: cover; background-position: center;" : "background: " . htmlspecialchars($item['banner_bg']) . ";" ?> display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" title="Click to play preview">

@@ -112,7 +112,9 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
                         $viewUrl = $isExt ? $item['link_url'] : ('../' . $item['link_url']);
                         ?>
                         <tr>
-                            <td data-sort-val="<?= $item['display_order'] ?>"><span style="font-weight: 700; color: #005B94;">#<?= $item['display_order'] ?></span></td>
+                            <td data-sort-val="<?= $item['display_order'] ?>">
+                                <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 32px; padding: 0 8px; border-radius: 8px; background: #E6F3FA; color: #005B94; font-weight: 800; font-size: 13px;">#<?= $item['display_order'] ?></span>
+                            </td>
                             <td data-sort-val="<?= htmlspecialchars($item['title']) ?>">
                                 <div style="display: flex; align-items: center; gap: 10px;">
                                     <span style="display: inline-block; width: 14px; height: 14px; border-radius: 3px; background: <?= htmlspecialchars($item['banner_bg']) ?>; border: 1px solid rgba(0,0,0,0.1);"></span>
@@ -200,7 +202,9 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
                 <?php else: ?>
                     <?php foreach ($recentVideos as $item): ?>
                         <tr>
-                            <td data-sort-val="<?= $item['display_order'] ?>"><span style="font-weight: 700; color: #005B94;">#<?= $item['display_order'] ?></span></td>
+                            <td data-sort-val="<?= $item['display_order'] ?>">
+                                <span style="display: inline-flex; align-items: center; justify-content: center; min-width: 34px; height: 32px; padding: 0 8px; border-radius: 8px; background: #E6F3FA; color: #005B94; font-weight: 800; font-size: 13px;">#<?= $item['display_order'] ?></span>
+                            </td>
                             <td data-sort-val="<?= $item['video_type'] === 'upload' ? 'Upload' : 'YouTube' ?>">
                                 <?php if ($item['video_type'] === 'upload'): ?>
                                     <span style="display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 6px; background: #D1FAE5; color: #065F46; font-size: 12px; font-weight: 600;">
