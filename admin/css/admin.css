@@ -37,11 +37,13 @@ body {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    min-height: 100vh;
+    height: 100vh;
+    max-height: 100vh;
     position: sticky;
     top: 0;
     transition: transform 0.3s ease;
     z-index: 50;
+    overflow: hidden;
 }
 
 .sidebar-brand {
@@ -51,6 +53,10 @@ body {
     align-items: center;
     gap: 12px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    flex-shrink: 0;
 }
 
 .sidebar-brand img {
@@ -72,6 +78,25 @@ body {
     flex-direction: column;
     gap: 6px;
     flex-grow: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sidebar-menu::-webkit-scrollbar {
+    width: 5px;
+}
+
+.sidebar-menu::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 4px;
+}
+
+.sidebar-menu::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.35);
 }
 
 .menu-label {
@@ -124,6 +149,7 @@ body {
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 13px;
     color: #CBD5E1;
+    flex-shrink: 0;
 }
 
 .admin-main {
