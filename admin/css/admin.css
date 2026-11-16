@@ -538,6 +538,26 @@ body {
     color: #6B7280;
 }
 
+.badge-status.new {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.badge-status.contacted {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.badge-status.archived {
+    background: #F1F5F9;
+    color: #64748B;
+}
+
+.badge-status.source {
+    background: #E6F3FA;
+    color: #005B94;
+}
+
 /* Modals */
 .modal-overlay {
     position: fixed;

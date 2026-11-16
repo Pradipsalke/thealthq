@@ -9,12 +9,17 @@ $db = getDB();
 $insightsCount = (int)$db->query("SELECT COUNT(*) FROM insights WHERE is_active = 1")->fetchColumn();
 $videosCount = (int)$db->query("SELECT COUNT(*) FROM videos WHERE is_active = 1")->fetchColumn();
 $uploadedVideosCount = (int)$db->query("SELECT COUNT(*) FROM videos WHERE video_type = 'upload'")->fetchColumn();
+$enquiriesCount = (int)$db->query("SELECT COUNT(*) FROM enquiries")->fetchColumn();
+$newEnquiriesCount = (int)$db->query("SELECT COUNT(*) FROM enquiries WHERE status = 'new'")->fetchColumn();
 
 // Fetch recent insights
 $recentInsights = $db->query("SELECT * FROM insights ORDER BY display_order ASC, id ASC LIMIT 5")->fetchAll();
 
 // Fetch recent videos
 $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id ASC LIMIT 5")->fetchAll();
+
+// Fetch recent enquiries
+$recentEnquiries = $db->query("SELECT * FROM enquiries ORDER BY id DESC LIMIT 5")->fetchAll();
 ?>
 
 <!-- Statistics Overview -->
@@ -48,6 +53,21 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
             <i class="fa-solid fa-cloud-arrow-up"></i>
         </div>
     </div>
+
+    <a href="enquiries.php" class="stat-card" style="text-decoration: none; color: inherit;">
+        <div class="stat-info">
+            <h3>Newsletter Enquiries</h3>
+            <div style="display: flex; align-items: baseline; gap: 8px;">
+                <div class="stat-number"><?= $enquiriesCount ?></div>
+                <?php if ($newEnquiriesCount > 0): ?>
+                    <span style="font-size: 12px; font-weight: 700; background: #FEF3C7; color: #92400E; padding: 2px 8px; border-radius: 999px;"><?= $newEnquiriesCount ?> new</span>
+                <?php endif; ?>
+            </div>
+        </div>
+        <div class="stat-icon" style="background: #EDE9FE; color: #7C3AED;">
+            <i class="fa-solid fa-envelope-open-text"></i>
+        </div>
+    </a>
 </div>
 
 <!-- Quick Action Shortcuts -->
@@ -59,6 +79,10 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
     <a href="videos.php?action=add" class="btn-accent">
         <i class="fa-solid fa-cloud-arrow-up"></i>
         <span>Upload / Add Video</span>
+    </a>
+    <a href="enquiries.php" class="btn-secondary">
+        <i class="fa-solid fa-envelope-open-text" style="color: #005B94;"></i>
+        <span>Manage Enquiries</span>
     </a>
 </div>
 
@@ -231,6 +255,98 @@ $recentVideos = $db->query("SELECT * FROM videos ORDER BY display_order ASC, id 
                                 <div class="action-buttons">
                                     <a href="videos.php?action=edit&id=<?= $item['id'] ?>" class="btn-icon" title="Edit">
                                         <i class="fa-solid fa-pen-to-square"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="admin-card-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <div class="admin-card-title">Recent Newsletter Enquiries</div>
+            <?php if ($newEnquiriesCount > 0): ?>
+                <span class="badge-status new"><?= $newEnquiriesCount ?> new</span>
+            <?php endif; ?>
+        </div>
+        <a href="enquiries.php" class="btn-secondary" style="font-size: 13px;">Manage All Enquiries (<?= $enquiriesCount ?>) →</a>
+    </div>
+    <div style="overflow-x: auto;">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th style="width: 70px;" class="sortable" data-sort="id" data-sort-type="number" title="Click to sort by ID">
+                        <span class="th-sort-content">
+                            <span>#</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th class="sortable" data-sort="email" data-sort-type="text" title="Click to sort by email">
+                        <span class="th-sort-content">
+                            <span>Subscriber / Work Email</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th style="width: 140px;" class="sortable" data-sort="source" data-sort-type="text" title="Click to sort by source">
+                        <span class="th-sort-content">
+                            <span>Source</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th style="width: 130px;" class="sortable" data-sort="status" data-sort-type="text" title="Click to sort by status">
+                        <span class="th-sort-content">
+                            <span>Status</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th style="width: 180px;" class="sortable" data-sort="date" data-sort-type="text" title="Click to sort by date">
+                        <span class="th-sort-content">
+                            <span>Date Received</span>
+                            <span class="th-sort-icon"><i class="fa-solid fa-sort"></i></span>
+                        </span>
+                    </th>
+                    <th style="width: 100px; text-align: right;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (empty($recentEnquiries)): ?>
+                    <tr>
+                        <td colspan="6" style="text-align: center; color: #64748B; padding: 24px;">No newsletter enquiries yet. Submissions from the website will appear here.</td>
+                    </tr>
+                <?php else: ?>
+                    <?php foreach ($recentEnquiries as $enq): ?>
+                        <tr>
+                            <td data-sort-val="<?= $enq['id'] ?>">
+                                <span style="font-weight: 700; font-size: 13px; color: #64748B;">#<?= $enq['id'] ?></span>
+                            </td>
+                            <td data-sort-val="<?= htmlspecialchars($enq['email']) ?>">
+                                <div style="font-weight: 700;"><?= htmlspecialchars($enq['email']) ?></div>
+                                <?php if (!empty($enq['name'])): ?>
+                                    <div style="font-size: 12px; color: #64748B;"><?= htmlspecialchars($enq['name']) ?></div>
+                                <?php endif; ?>
+                            </td>
+                            <td data-sort-val="<?= htmlspecialchars($enq['source'] ?? 'Newsletter') ?>">
+                                <span class="badge-status source"><?= htmlspecialchars($enq['source'] ?? 'Newsletter') ?></span>
+                            </td>
+                            <td data-sort-val="<?= $enq['status'] ?>">
+                                <span class="badge-status <?= htmlspecialchars($enq['status']) ?>">
+                                    <i class="fa-solid fa-circle" style="font-size: 7px;"></i>
+                                    <?= ucfirst($enq['status']) ?>
+                                </span>
+                            </td>
+                            <td data-sort-val="<?= $enq['created_at'] ?>">
+                                <div style="font-size: 13px; font-weight: 600;"><?= date('M d, Y', strtotime($enq['created_at'])) ?></div>
+                                <div style="font-size: 11px; color: #94A3B8;"><?= date('h:i A', strtotime($enq['created_at'])) ?></div>
+                            </td>
+                            <td style="text-align: right;">
+                                <div class="action-buttons" style="justify-content: flex-end;">
+                                    <a href="enquiries.php?search=<?= urlencode($enq['email']) ?>" class="btn-icon" title="View in Enquiries">
+                                        <i class="fa-solid fa-arrow-right"></i>
                                     </a>
                                 </div>
                             </td>

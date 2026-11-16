@@ -22,6 +22,20 @@
             <span>Videos & Media</span>
         </a>
 
+        <div class="menu-label">Audience & Leads</div>
+        <a href="enquiries.php" class="menu-item <?= ($activePage ?? '') === 'enquiries' ? 'active' : '' ?>">
+            <i class="fa-solid fa-envelope-open-text"></i>
+            <span>Newsletter Enquiries</span>
+            <?php
+            try {
+                $newEnquiryCount = (int)getDB()->query("SELECT COUNT(*) FROM enquiries WHERE status = 'new'")->fetchColumn();
+                if ($newEnquiryCount > 0): ?>
+                    <span style="margin-left: auto; background: #FFD200; color: #1E2229; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 999px;"><?= $newEnquiryCount ?></span>
+                <?php endif;
+            } catch (Exception $e) {}
+            ?>
+        </a>
+
         <div class="menu-label">Account</div>
         <a href="profile.php" class="menu-item <?= ($activePage ?? '') === 'profile' ? 'active' : '' ?>">
             <i class="fa-solid fa-user-gear"></i>

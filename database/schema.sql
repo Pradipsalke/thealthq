@@ -58,6 +58,22 @@ CREATE TABLE IF NOT EXISTS `videos` (
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `enquiries` (
+    `id` INT AUTO_INCREMENT PRIMARY KEY,
+    `email` VARCHAR(255) NOT NULL,
+    `name` VARCHAR(255) DEFAULT NULL,
+    `source` VARCHAR(100) DEFAULT 'Newsletter',
+    `status` ENUM('new', 'contacted', 'archived') DEFAULT 'new',
+    `notes` TEXT DEFAULT NULL,
+    `ip_address` VARCHAR(45) DEFAULT NULL,
+    `user_agent` VARCHAR(500) DEFAULT NULL,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX `idx_email` (`email`),
+    INDEX `idx_status` (`status`),
+    INDEX `idx_created_at` (`created_at`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Default Admin User: admin / Admin@123
 INSERT INTO `admin_users` (`id`, `username`, `password_hash`, `name`) 
 VALUES (1, 'admin', '$2y$10$h587hwExOztG05eTh41XDefD6nN9o8JHFyUp7U4hrPGUlaEq1qxj.', 'Administrator')
