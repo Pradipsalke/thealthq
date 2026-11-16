@@ -22,6 +22,12 @@
             <span>Videos & Media</span>
         </a>
 
+        <div class="menu-label">Account</div>
+        <a href="profile.php" class="menu-item <?= ($activePage ?? '') === 'profile' ? 'active' : '' ?>">
+            <i class="fa-solid fa-user-gear"></i>
+            <span>Profile & Security</span>
+        </a>
+
         <div class="menu-label">Navigation</div>
         <a href="../index.php" target="_blank" class="menu-item">
             <i class="fa-solid fa-globe"></i>

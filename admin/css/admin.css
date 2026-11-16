@@ -45,25 +45,24 @@ body {
 }
 
 .sidebar-brand {
-    padding: 24px 20px;
-    background: #003657;
+    padding: 20px;
+    background: #FFFFFF;
     display: flex;
     align-items: center;
     gap: 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .sidebar-brand img {
-    height: 34px;
+    height: 32px;
     width: auto;
-    filter: brightness(0) invert(1);
 }
 
 .sidebar-brand-title {
     font-family: 'Montserrat', sans-serif;
     font-weight: 800;
-    font-size: 16px;
-    color: #FFFFFF;
+    font-size: 15px;
+    color: #005B94;
     letter-spacing: -0.01em;
 }
 
@@ -203,6 +202,16 @@ body {
     gap: 10px;
     font-size: 14px;
     font-weight: 600;
+    color: var(--charcoal);
+    text-decoration: none;
+    padding: 4px 10px 4px 6px;
+    border-radius: 999px;
+    transition: background 0.15s ease;
+}
+
+.user-badge:hover {
+    background: #F1F5F9;
+    color: var(--primary);
 }
 
 .user-avatar {

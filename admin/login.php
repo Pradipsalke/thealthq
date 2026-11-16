@@ -72,27 +72,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             overflow: hidden;
         }
         .login-header {
-            background: #005B94;
-            color: #FFFFFF;
-            padding: 36px 32px 30px;
+            background: #FFFFFF;
+            color: #1E2229;
+            padding: 36px 32px 24px;
             text-align: center;
+            border-bottom: 1px solid #E2E8F0;
         }
         .login-header img {
             height: 44px;
             width: auto;
             margin-bottom: 14px;
-            filter: brightness(0) invert(1);
         }
         .login-header h1 {
             font-family: 'Montserrat', sans-serif;
             font-weight: 800;
             font-size: 22px;
             margin-bottom: 6px;
-            color: #FFFFFF;
+            color: #005B94;
         }
         .login-header p {
             font-size: 14px;
-            color: #DCEBF5;
+            color: #64748B;
         }
         .login-body {
             padding: 32px;
@@ -182,15 +182,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .login-footer a:hover {
             text-decoration: underline;
         }
-        .credentials-tip {
-            margin-top: 20px;
-            padding: 12px;
-            background: #F1F5F9;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #475569;
-            line-height: 1.5;
-        }
     </style>
 </head>
 <body>
@@ -231,11 +222,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <i class="fa-solid fa-arrow-right"></i>
             </button>
         </form>
-
-        <div class="credentials-tip">
-            <strong>Default Credentials:</strong><br>
-            Username: <code>admin</code> &nbsp;|&nbsp; Password: <code>Admin@123</code>
-        </div>
 
         <div class="login-footer">
             <a href="../index.php"><i class="fa-solid fa-arrow-left"></i> Back to Website</a>

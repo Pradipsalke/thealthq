@@ -35,10 +35,13 @@ $activePage = $activePage ?? 'dashboard';
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 <span>View Website</span>
             </a>
-            <div class="user-badge">
+            <a href="profile.php" class="user-badge" title="Edit Profile & Password">
                 <div class="user-avatar"><?= strtoupper(substr($_SESSION['admin_name'] ?? 'A', 0, 1)) ?></div>
                 <span class="user-name"><?= htmlspecialchars($_SESSION['admin_name'] ?? 'Admin') ?></span>
-            </div>
+            </a>
+            <a href="profile.php" class="btn-icon" title="Profile & Security">
+                <i class="fa-solid fa-user-gear"></i>
+            </a>
             <a href="logout.php" class="btn-icon" title="Log Out" style="color: #EF4444;">
                 <i class="fa-solid fa-right-from-bracket"></i>
             </a>
