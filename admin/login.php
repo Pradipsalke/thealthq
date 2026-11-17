@@ -124,11 +124,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             display: flex;
             align-items: center;
         }
-        .input-wrapper i {
+        .input-wrapper > i {
             position: absolute;
             left: 14px;
             color: #94A3B8;
             font-size: 15px;
+            pointer-events: none;
+        }
+        .btn-toggle-pass {
+            position: absolute;
+            right: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94A3B8;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: color 0.15s ease;
+        }
+        .btn-toggle-pass:hover {
+            color: #005B94;
+        }
+        .btn-toggle-pass i {
+            position: static !important;
+            font-size: 16px;
+            color: inherit !important;
         }
         .input-wrapper input {
             width: 100%;
@@ -213,7 +236,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="password">Password</label>
                 <div class="input-wrapper">
                     <i class="fa-solid fa-lock"></i>
-                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required style="padding-right: 44px;">
+                    <button type="button" class="btn-toggle-pass" onclick="togglePassVisibility('password', this)" aria-label="Toggle password visibility">
+                        <i class="fa-regular fa-eye"></i>
+                    </button>
                 </div>
             </div>
 
@@ -228,6 +254,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </div>
+
+<script>
+function togglePassVisibility(inputId, btn) {
+    var input = document.getElementById(inputId);
+    var icon = btn.querySelector('i');
+    if (!input || !icon) return;
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-regular fa-eye-slash';
+        btn.style.color = '#005B94';
+        btn.setAttribute('aria-label', 'Hide password');
+    } else {
+        input.type = 'password';
+        icon.className = 'fa-regular fa-eye';
+        btn.style.color = '#94A3B8';
+        btn.setAttribute('aria-label', 'Show password');
+    }
+}
+</script>
 
 </body>
 </html>
