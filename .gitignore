@@ -3,6 +3,9 @@ Thumbs.db
 *.zip
 .env
 
+# Database local override (for dev/prod servers)
+config/db.local.php
+
 # User uploaded media
 uploads/videos/*
 !uploads/videos/.gitkeep

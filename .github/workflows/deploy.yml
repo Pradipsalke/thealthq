@@ -2,28 +2,43 @@ name: Deploy to FTP
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
+      - dev
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Deployment destination'
+        required: true
+        default: 'auto'
+        type: choice
+        options:
+          - auto
+          - production
+          - dev
 
 concurrency:
-  group: deploy-production
+  group: deploy-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    name: Sync files to hosting
+  deploy-production:
+    name: Sync to Production (main -> /)
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_dispatch' && (inputs.target == 'production' || (inputs.target == 'auto' && github.ref == 'refs/heads/main')))
     runs-on: ubuntu-latest
     steps:
       - name: Get latest code
         uses: actions/checkout@v7
 
-      - name: FTP deploy
+      - name: FTP deploy to production
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          server-dir: /
+          server-dir: ${{ secrets.FTP_SERVER_DIR || '/' }}
           port: 21
           protocol: ftp
           log-level: standard
@@ -32,6 +47,38 @@ jobs:
             **/.git*/**
             **/.github/**
             **/.agents/**
+            config/db.local.php
+            AGENTS.md
+            README.md
+            TODO.md
+            .nojekyll
+
+  deploy-dev:
+    name: Sync to Development (dev -> /dev)
+    if: |
+      (github.event_name == 'push' && github.ref == 'refs/heads/dev') ||
+      (github.event_name == 'workflow_dispatch' && (inputs.target == 'dev' || (inputs.target == 'auto' && github.ref == 'refs/heads/dev')))
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v7
+
+      - name: FTP deploy to dev
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_DEV_SERVER || secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_DEV_USERNAME || secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_DEV_PASSWORD || secrets.FTP_PASSWORD }}
+          server-dir: ${{ secrets.FTP_DEV_SERVER_DIR || '/dev/' }}
+          port: 21
+          protocol: ftp
+          log-level: standard
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/.agents/**
+            config/db.local.php
             AGENTS.md
             README.md
             TODO.md

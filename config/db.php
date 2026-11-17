@@ -4,11 +4,16 @@
  * The ALT HQ
  */
 
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'the_alt_hq');
-define('DB_CHARSET', 'utf8mb4');
+// Allow local environment override (e.g. on live dev/prod hosting servers)
+if (file_exists(__DIR__ . '/db.local.php')) {
+    require_once __DIR__ . '/db.local.php';
+}
+
+if (!defined('DB_HOST')) define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+if (!defined('DB_USER')) define('DB_USER', getenv('DB_USER') ?: 'root');
+if (!defined('DB_PASS')) define('DB_PASS', getenv('DB_PASS') !== false ? getenv('DB_PASS') : '');
+if (!defined('DB_NAME')) define('DB_NAME', getenv('DB_NAME') ?: 'the_alt_hq');
+if (!defined('DB_CHARSET')) define('DB_CHARSET', 'utf8mb4');
 
 function getDB() {
     static $pdo = null;
@@ -35,7 +40,21 @@ function getDB() {
         }
     }
 
+    ensureTablesExist($pdo);
+
     return $pdo;
+}
+
+function ensureTablesExist($pdo) {
+    try {
+        $pdo->query("SELECT 1 FROM `admin_users` LIMIT 1");
+    } catch (Exception $e) {
+        $schemaFile = __DIR__ . '/../database/schema.sql';
+        if (file_exists($schemaFile)) {
+            $sql = file_get_contents($schemaFile);
+            $pdo->exec($sql);
+        }
+    }
 }
 
 function initDatabase() {
