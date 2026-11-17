@@ -21,7 +21,12 @@ function getDB() {
         return $pdo;
     }
 
-    $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=" . DB_CHARSET;
+    $host = trim(DB_HOST);
+    $user = trim(DB_USER);
+    $pass = trim((string)DB_PASS);
+    $name = trim(DB_NAME);
+
+    $dsn = "mysql:host=" . $host . ";dbname=" . $name . ";charset=" . DB_CHARSET;
     $options = [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
@@ -29,12 +34,12 @@ function getDB() {
     ];
 
     try {
-        $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+        $pdo = new PDO($dsn, $user, $pass, $options);
     } catch (PDOException $e) {
         // If database does not exist, attempt to initialize it automatically
         if ($e->getCode() == 1049) {
             initDatabase();
-            $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
+            $pdo = new PDO($dsn, $user, $pass, $options);
         } else {
             throw $e;
         }
@@ -58,13 +63,18 @@ function ensureTablesExist($pdo) {
 }
 
 function initDatabase() {
-    $dsn = "mysql:host=" . DB_HOST . ";charset=" . DB_CHARSET;
-    $pdo = new PDO($dsn, DB_USER, DB_PASS, [
+    $host = trim(DB_HOST);
+    $user = trim(DB_USER);
+    $pass = trim((string)DB_PASS);
+    $name = trim(DB_NAME);
+
+    $dsn = "mysql:host=" . $host . ";charset=" . DB_CHARSET;
+    $pdo = new PDO($dsn, $user, $pass, [
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
     ]);
     
-    $pdo->exec("CREATE DATABASE IF NOT EXISTS `" . DB_NAME . "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
-    $pdo->exec("USE `" . DB_NAME . "`;");
+    $pdo->exec("CREATE DATABASE IF NOT EXISTS `" . $name . "` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;");
+    $pdo->exec("USE `" . $name . "`;");
 
     $schemaFile = __DIR__ . '/../database/schema.sql';
     if (file_exists($schemaFile)) {
