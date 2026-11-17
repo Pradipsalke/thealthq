@@ -59,7 +59,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     $token = $_POST['csrf_token'] ?? '';
     if (!verifyCsrfToken($token)) {
         setFlash('error', 'Security check failed. Please try again.');
-        header('Location: enquiries.php');
+        header('Location: enquiries');
         exit;
     }
 
@@ -73,7 +73,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             $stmt->execute([$deleteId]);
             setFlash('success', 'Enquiry #' . $deleteId . ' has been deleted.');
         }
-        header('Location: enquiries.php');
+        header('Location: enquiries');
         exit;
     }
 
@@ -86,7 +86,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             $stmt->execute([$newStatus, $targetId]);
             setFlash('success', 'Status updated to "' . ucfirst($newStatus) . '".');
         }
-        header('Location: enquiries.php');
+        header('Location: enquiries');
         exit;
     }
 
@@ -99,7 +99,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             $stmt->execute([$notes, $targetId]);
             setFlash('success', 'Notes saved successfully.');
         }
-        header('Location: enquiries.php');
+        header('Location: enquiries');
         exit;
     }
 
@@ -110,7 +110,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 
         if (empty($selectedIds) || !is_array($selectedIds)) {
             setFlash('error', 'No enquiries were selected.');
-            header('Location: enquiries.php');
+            header('Location: enquiries');
             exit;
         }
 
@@ -139,7 +139,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             }
         }
 
-        header('Location: enquiries.php');
+        header('Location: enquiries');
         exit;
     }
 }
@@ -182,7 +182,7 @@ require_once __DIR__ . '/includes/header.php';
         <div style="font-size: 13px; color: var(--slate);">Review subscriber signups and manage reader enquiries stored directly in your database.</div>
     </div>
     <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <a href="enquiries.php?action=export<?= !empty($filterStatus) ? '&status=' . urlencode($filterStatus) : '' ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?>" class="btn-secondary" title="Export current list to CSV">
+        <a href="enquiries?action=export<?= !empty($filterStatus) ? '&status=' . urlencode($filterStatus) : '' ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?>" class="btn-secondary" title="Export current list to CSV">
             <i class="fa-solid fa-file-csv" style="color: #059669;"></i>
             <span>Export to CSV</span>
         </a>
@@ -234,7 +234,7 @@ require_once __DIR__ . '/includes/header.php';
 
 <!-- Filter Bar & Search -->
 <div class="admin-card" style="margin-bottom: 24px; padding: 18px 24px;">
-    <form method="GET" action="enquiries.php" style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
+    <form method="GET" action="enquiries" style="display: flex; gap: 14px; align-items: center; flex-wrap: wrap;">
         <!-- Search -->
         <div style="flex: 1; min-width: 220px; position: relative;">
             <input type="text" name="search" class="form-control" placeholder="Search by email address..." value="<?= htmlspecialchars($search) ?>" style="padding-left: 36px; padding-top: 9px; padding-bottom: 9px;">
@@ -257,7 +257,7 @@ require_once __DIR__ . '/includes/header.php';
         </button>
 
         <?php if (!empty($search) || !empty($filterStatus)): ?>
-            <a href="enquiries.php" class="btn-secondary" style="padding: 9px 14px;" title="Clear search and filters">
+            <a href="enquiries" class="btn-secondary" style="padding: 9px 14px;" title="Clear search and filters">
                 <i class="fa-solid fa-xmark"></i>
                 <span>Reset</span>
             </a>
@@ -274,7 +274,7 @@ require_once __DIR__ . '/includes/header.php';
         </div>
 
         <!-- Bulk Action Bar (Hidden by default, shown when checkboxes are checked) -->
-        <form method="POST" action="enquiries.php" id="bulk-action-form" style="display: none; align-items: center; gap: 10px;">
+        <form method="POST" action="enquiries" id="bulk-action-form" style="display: none; align-items: center; gap: 10px;">
             <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
             <input type="hidden" name="post_action" value="bulk_action">
             <span id="selected-count-label" style="font-size: 13px; font-weight: 700; color: #005B94;">0 selected</span>
@@ -370,7 +370,7 @@ require_once __DIR__ . '/includes/header.php';
                                 </span>
                             </td>
                             <td data-sort-val="<?= $row['status'] ?>">
-                                <form method="POST" action="enquiries.php" style="margin: 0;">
+                                <form method="POST" action="enquiries" style="margin: 0;">
                                     <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                                     <input type="hidden" name="post_action" value="update_status">
                                     <input type="hidden" name="id" value="<?= $row['id'] ?>">
@@ -425,7 +425,7 @@ require_once __DIR__ . '/includes/header.php';
             </div>
             <button type="button" class="modal-close" onclick="closeNotesModal()">&times;</button>
         </div>
-        <form method="POST" action="enquiries.php">
+        <form method="POST" action="enquiries">
             <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
             <input type="hidden" name="post_action" value="update_notes">
             <input type="hidden" name="id" id="notesModalId">
@@ -454,7 +454,7 @@ require_once __DIR__ . '/includes/header.php';
             <h3 class="modal-title" style="color: #DC2626;"><i class="fa-solid fa-triangle-exclamation"></i> Delete Enquiry</h3>
             <button type="button" class="modal-close" onclick="closeDeleteModal()">&times;</button>
         </div>
-        <form method="POST" action="enquiries.php">
+        <form method="POST" action="enquiries">
             <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
             <input type="hidden" name="post_action" value="delete">
             <input type="hidden" name="id" id="deleteEnquiryId">

@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!verifyCsrfToken($token)) {
         setFlash('error', 'Security check failed. Please try again.');
-        header('Location: videos.php');
+        header('Location: videos');
         exit;
     }
 
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (empty($title)) {
             setFlash('error', 'Please enter a video title.');
-            header('Location: videos.php' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
+            header('Location: videos' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
             exit;
         }
 
@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 if (!in_array($ext, $allowed)) {
                     setFlash('error', 'Invalid video file type. Allowed: MP4, WebM, OGG, MOV.');
-                    header('Location: videos.php' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
+                    header('Location: videos' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
                     exit;
                 }
 
@@ -90,19 +90,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $finalVideoPath = 'uploads/videos/' . $filename;
                 } else {
                     setFlash('error', 'Failed to upload video file. Check server upload limits.');
-                    header('Location: videos.php' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
+                    header('Location: videos' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
                     exit;
                 }
             } elseif (empty($finalVideoPath)) {
                 setFlash('error', 'Please select a video file to upload.');
-                header('Location: videos.php' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
+                header('Location: videos' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
                 exit;
             }
         } else {
             // External / YouTube URL
             if (empty($videoUrl)) {
                 setFlash('error', 'Please enter a valid YouTube or video URL.');
-                header('Location: videos.php' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
+                header('Location: videos' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
                 exit;
             }
             $finalVideoPath = $videoUrl;
@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (!in_array($thumbExt, $allowedThumbs)) {
                 setFlash('error', 'Invalid thumbnail format. Allowed: JPG, PNG, WebP.');
-                header('Location: videos.php' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
+                header('Location: videos' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
                 exit;
             }
 
@@ -154,7 +154,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$title, $badge, $metaInfo, $videoType, $finalVideoPath, $finalThumbPath, $bannerBg, $badgeColor, $buttonText, $displayOrder, $isActive]);
             setFlash('success', 'Video published successfully.');
         }
-        header('Location: videos.php');
+        header('Location: videos');
         exit;
     }
 
@@ -177,7 +177,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 setFlash('success', 'Video deleted successfully.');
             }
         }
-        header('Location: videos.php');
+        header('Location: videos');
         exit;
     }
 
@@ -188,7 +188,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$toggleId]);
             setFlash('success', 'Status toggled successfully.');
         }
-        header('Location: videos.php');
+        header('Location: videos');
         exit;
     }
 
@@ -217,7 +217,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 setFlash('success', 'Video order updated.');
             }
         }
-        header('Location: videos.php');
+        header('Location: videos');
         exit;
     }
 }
@@ -230,7 +230,7 @@ if ($action === 'edit' && $id > 0) {
     $editItem = $stmt->fetch();
     if (!$editItem) {
         setFlash('error', 'Video not found.');
-        header('Location: videos.php');
+        header('Location: videos');
         exit;
     }
 }
@@ -265,13 +265,13 @@ require_once __DIR__ . '/includes/header.php';
     <div class="admin-card">
         <div class="admin-card-header">
             <div class="admin-card-title"><?= $action === 'edit' ? 'Edit Video' : 'Upload / Add Video' ?></div>
-            <a href="videos.php" class="btn-secondary">
+            <a href="videos" class="btn-secondary">
                 <i class="fa-solid fa-arrow-left"></i>
                 <span>Cancel & Back</span>
             </a>
         </div>
         <div class="modal-body">
-            <form method="POST" action="videos.php" enctype="multipart/form-data" id="video-upload-form">
+            <form method="POST" action="videos" enctype="multipart/form-data" id="video-upload-form">
                 <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                 <input type="hidden" name="post_action" value="save">
                 <input type="hidden" name="id" value="<?= $editItem['id'] ?? 0 ?>">
@@ -388,7 +388,7 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
 
                 <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
-                    <a href="videos.php" class="btn-secondary">Cancel</a>
+                    <a href="videos" class="btn-secondary">Cancel</a>
                     <button type="submit" class="btn-accent" style="padding: 12px 28px;">
                         <i class="fa-solid fa-floppy-disk"></i>
                         <span>Save & Publish Video</span>
@@ -434,7 +434,7 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="admin-card-title">All Videos (<?= count($videos) ?>)</div>
                 <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">Click any table heading to sort by column.</div>
             </div>
-            <a href="videos.php?action=add" class="btn-accent">
+            <a href="videos?action=add" class="btn-accent">
                 <i class="fa-solid fa-cloud-arrow-up"></i>
                 <span>Upload / Add Video</span>
             </a>
@@ -524,7 +524,7 @@ require_once __DIR__ . '/includes/header.php';
                                     <span style="font-size: 13px; font-weight: 600; color: #005B94;"><?= htmlspecialchars($item['badge']) ?></span>
                                 </td>
                                 <td data-sort-val="<?= $item['is_active'] ?>">
-                                    <form method="POST" action="videos.php" style="display: inline;">
+                                    <form method="POST" action="videos" style="display: inline;">
                                         <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                                         <input type="hidden" name="post_action" value="toggle_status">
                                         <input type="hidden" name="toggle_id" value="<?= $item['id'] ?>">
@@ -541,7 +541,7 @@ require_once __DIR__ . '/includes/header.php';
                                         <button type="button" class="btn-icon" title="Play Preview" onclick="previewVideo('<?= htmlspecialchars($item['video_type']) ?>', '<?= htmlspecialchars($item['video_type'] === 'upload' ? '../' . $item['video_path'] : $item['video_path']) ?>', '<?= addslashes(htmlspecialchars($item['title'])) ?>')">
                                             <i class="fa-solid fa-play"></i>
                                         </button>
-                                        <a href="videos.php?action=edit&id=<?= $item['id'] ?>" class="btn-icon" title="Edit">
+                                        <a href="videos?action=edit&id=<?= $item['id'] ?>" class="btn-icon" title="Edit">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
                                         <button type="button" class="btn-icon" style="color: #DC2626;" title="Delete" onclick="confirmDelete(<?= $item['id'] ?>, '<?= addslashes(htmlspecialchars($item['title'])) ?>')">
@@ -581,7 +581,7 @@ require_once __DIR__ . '/includes/header.php';
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                <form method="POST" action="videos.php" id="delete-form" style="display: inline;">
+                <form method="POST" action="videos" id="delete-form" style="display: inline;">
                     <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                     <input type="hidden" name="post_action" value="delete">
                     <input type="hidden" name="delete_id" id="delete-item-id" value="">

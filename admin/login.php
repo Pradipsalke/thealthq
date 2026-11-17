@@ -2,7 +2,7 @@
 require_once __DIR__ . '/auth.php';
 
 if (isAdminLoggedIn()) {
-    header('Location: index.php');
+    header('Location: ./');
     exit;
 }
 
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['admin_username'] = $user['username'];
                 $_SESSION['admin_name'] = $user['name'];
 
-                header('Location: index.php');
+                header('Location: ./');
                 exit;
             } else {
                 $error = 'Invalid username or password.';
@@ -223,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         <?php endif; ?>
 
-        <form method="POST" action="login.php">
+        <form method="POST" action="login">
             <div class="form-group">
                 <label for="username">Username</label>
                 <div class="input-wrapper">
@@ -250,7 +250,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </form>
 
         <div class="login-footer">
-            <a href="../index.php"><i class="fa-solid fa-arrow-left"></i> Back to Website</a>
+            <a href="../"><i class="fa-solid fa-arrow-left"></i> Back to Website</a>
         </div>
     </div>
 </div>

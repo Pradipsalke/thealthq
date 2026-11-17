@@ -32,7 +32,7 @@ try {
 // If external insight accessed directly, redirect to source link
 if ($article && ($article['insight_type'] === 'external' || !empty($article['is_external']))) {
     $externalUrl = $article['link_url'];
-    if (!empty($externalUrl) && strpos($externalUrl, 'insight.php') === false) {
+    if (!empty($externalUrl) && strpos($externalUrl, 'insight') === false) {
         header('Location: ' . $externalUrl, true, 302);
         exit;
     }
@@ -81,14 +81,14 @@ $ogImage = !empty($article['featured_image']) ? $article['featured_image'] : 'as
 
 <header class="art-pad" style="position: sticky; top: 0; z-index: 10; background: #FFFFFF; border-bottom: 1px solid #E2E8F0; padding: 0 64px">
 <nav style="max-width: 1240px; margin: 0 auto; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px" aria-label="Main">
-<a href="index.php" aria-label="The ALT HQ home" style="display: flex; align-items: center; text-decoration: none"><img src="assets/wordmark.png" alt="The ALT HQ" class="art-logo" style="height: 46px; width: auto; display: block"></a>
+<a href="./" aria-label="The ALT HQ home" style="display: flex; align-items: center; text-decoration: none"><img src="assets/wordmark.png" alt="The ALT HQ" class="art-logo" style="height: 46px; width: auto; display: block"></a>
 <div class="art-nav-links" style="display: flex; align-items: center; gap: 32px; font-size: 15px; font-weight: 500">
-<a href="index.php#book" style="color: #1E2229; text-decoration: none">The Book</a>
-<a href="index.php#authors" style="color: #1E2229; text-decoration: none">Authors</a>
-<a href="index.php#insights" style="color: #005B94; text-decoration: none; font-weight: 600">Insights</a>
-<a href="index.php#work" style="color: #1E2229; text-decoration: none">Work With Us</a>
+<a href="./#book" style="color: #1E2229; text-decoration: none">The Book</a>
+<a href="./#authors" style="color: #1E2229; text-decoration: none">Authors</a>
+<a href="./#insights" style="color: #005B94; text-decoration: none; font-weight: 600">Insights</a>
+<a href="./#work" style="color: #1E2229; text-decoration: none">Work With Us</a>
 </div>
-<a href="index.php#buy" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 999px; background: #FFD200; color: #1E2229; font-weight: 600; font-size: 15px; text-decoration: none">Buy the book</a>
+<a href="./#buy" style="display: inline-flex; align-items: center; min-height: 44px; padding: 0 22px; border-radius: 999px; background: #FFD200; color: #1E2229; font-weight: 600; font-size: 15px; text-decoration: none">Buy the book</a>
 </nav>
 </header>
 
@@ -99,7 +99,7 @@ $ogImage = !empty($article['featured_image']) ? $article['featured_image'] : 'as
         <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #005B94;">404 · Not Found</span>
         <h1 style="font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 38px; color: #1E2229; margin: 16px 0;">Insight Article Not Found</h1>
         <p style="font-size: 17px; line-height: 1.6; color: #4A5568; margin-bottom: 28px;">The insight or article you are looking for may have been moved, unpublished, or is no longer available.</p>
-        <a href="index.php#insights" style="display: inline-flex; align-items: center; min-height: 46px; padding: 0 24px; border-radius: 999px; background: #005B94; color: #FFFFFF; font-weight: 600; font-size: 15px; text-decoration: none;">← Back to All Insights</a>
+        <a href="./#insights" style="display: inline-flex; align-items: center; min-height: 46px; padding: 0 24px; border-radius: 999px; background: #005B94; color: #FFFFFF; font-weight: 600; font-size: 15px; text-decoration: none;">← Back to All Insights</a>
     </div>
 </main>
 <?php else: ?>
@@ -107,7 +107,7 @@ $ogImage = !empty($article['featured_image']) ? $article['featured_image'] : 'as
 <article style="flex: 1;">
 <div class="art-pad" style="background: <?= htmlspecialchars($bannerBg) ?>; color: <?= htmlspecialchars($bannerTextColor) ?>; padding: 72px 64px 64px">
 <div style="max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px">
-<a href="index.php#insights" style="color: <?= ($bannerBg === '#FFD200') ? '#005B94' : '#CBE6F5' ?>; font-size: 14px; font-weight: 500; text-decoration: none">← All insights</a>
+<a href="./#insights" style="color: <?= ($bannerBg === '#FFD200') ? '#005B94' : '#CBE6F5' ?>; font-size: 14px; font-weight: 500; text-decoration: none">← All insights</a>
 <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: <?= htmlspecialchars($badgeColor) ?>"><?= htmlspecialchars($topBadge) ?></span>
 <h1 class="art-h1" style="margin: 0; font-family: 'Montserrat', sans-serif; font-weight: 900; font-size: 54px; line-height: 1.08; letter-spacing: -0.01em; color: <?= htmlspecialchars($bannerTextColor) ?>"><?= htmlspecialchars($article['title']) ?></h1>
 <?php if (!empty($subtitle)): ?>
@@ -155,7 +155,7 @@ $ogImage = !empty($article['featured_image']) ? $article['featured_image'] : 'as
 <span style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 21px">The ALT HQ: GCC Beyond The Obvious</span>
 <span style="font-size: 15px; line-height: 1.5; color: #DCEBF5">How Global Capability Centres can become true alternate headquarters.</span>
 </div>
-<a href="index.php#buy" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; background: #FFD200; color: #1E2229; font-weight: 600; font-size: 15px; text-decoration: none">Get the book</a>
+<a href="./#buy" style="display: inline-flex; align-items: center; min-height: 48px; padding: 0 24px; border-radius: 999px; background: #FFD200; color: #1E2229; font-weight: 600; font-size: 15px; text-decoration: none">Get the book</a>
 </div>
 </div>
 </div>

@@ -528,7 +528,7 @@ try {
 </div>
 <div style="border-top: 1px solid rgba(255, 255, 255, 0.25); padding-top: 24px; font-size: 14px; color: #DCEBF5; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
 <div>© 2026 Nilesh Biniwale and Nilesh Kulkarni. Published by Diamond Publications.</div>
-<div><a href="admin/login.php" style="color: #DCEBF5; text-decoration: none; font-size: 13px; opacity: 0.85;"><i class="fa-solid fa-lock" style="font-size: 11px;"></i> Admin Portal</a></div>
+<div><a href="admin/login" style="color: #DCEBF5; text-decoration: none; font-size: 13px; opacity: 0.85;"><i class="fa-solid fa-lock" style="font-size: 11px;"></i> Admin Portal</a></div>
 </div>
 </div>
 </footer>

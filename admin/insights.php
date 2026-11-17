@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!verifyCsrfToken($token)) {
         setFlash('error', 'Security check failed. Please try again.');
-        header('Location: insights.php');
+        header('Location: insights');
         exit;
     }
 
@@ -66,13 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (empty($title) || empty($headline) || empty($linkUrl)) {
                 setFlash('error', 'Please fill in all required fields (Title, Card Headline, and External URL).');
-                header('Location: insights.php' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
+                header('Location: insights' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
                 exit;
             }
 
             if (!preg_match('~^https?://~i', $linkUrl)) {
                 setFlash('error', 'External URL must start with http:// or https://');
-                header('Location: insights.php' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
+                header('Location: insights' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
                 exit;
             }
 
@@ -118,7 +118,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $slug = $slug . '-' . time();
             }
 
-            $linkUrl = 'insight.php?slug=' . $slug;
+            $linkUrl = 'insight?slug=' . $slug;
 
             // Handle Featured Image Upload or Path
             $featuredImage = trim($_POST['featured_image'] ?? ($existing['featured_image'] ?? ''));
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             if (empty($title) || empty($headline) || empty($content)) {
                 setFlash('error', 'Please fill in all required fields (Title, Card Headline, and Article Body Content).');
-                header('Location: insights.php' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
+                header('Location: insights' . ($editId > 0 ? "?action=edit&id=$editId" : '?action=add'));
                 exit;
             }
         }
@@ -198,7 +198,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
             setFlash('success', 'New insight created successfully.');
         }
-        header('Location: insights.php');
+        header('Location: insights');
         exit;
     }
 
@@ -209,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$delId]);
             setFlash('success', 'Insight deleted successfully.');
         }
-        header('Location: insights.php');
+        header('Location: insights');
         exit;
     }
 
@@ -220,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->execute([$toggleId]);
             setFlash('success', 'Status updated.');
         }
-        header('Location: insights.php');
+        header('Location: insights');
         exit;
     }
 
@@ -249,7 +249,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 setFlash('success', 'Order updated.');
             }
         }
-        header('Location: insights.php');
+        header('Location: insights');
         exit;
     }
 }
@@ -262,7 +262,7 @@ if ($action === 'edit' && $id > 0) {
     $editItem = $stmt->fetch();
     if (!$editItem) {
         setFlash('error', 'Insight not found.');
-        header('Location: insights.php');
+        header('Location: insights');
         exit;
     }
 }
@@ -304,13 +304,13 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="admin-card-title"><?= $action === 'edit' ? 'Edit Insight' : 'Add New Insight' ?></div>
                 <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">Configure carousel presentation and dynamic blog post details.</div>
             </div>
-            <a href="insights.php" class="btn-secondary">
+            <a href="insights" class="btn-secondary">
                 <i class="fa-solid fa-arrow-left"></i>
                 <span>Cancel & Back</span>
             </a>
         </div>
         <div class="modal-body">
-            <form method="POST" action="insights.php" id="insight-form" enctype="multipart/form-data">
+            <form method="POST" action="insights" id="insight-form" enctype="multipart/form-data">
                 <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                 <input type="hidden" name="post_action" value="save">
                 <input type="hidden" name="id" value="<?= $editItem['id'] ?? 0 ?>">
@@ -448,7 +448,7 @@ require_once __DIR__ . '/includes/header.php';
                                         <i class="fa-solid fa-wand-magic-sparkles"></i>
                                     </button>
                                 </div>
-                                <div class="form-hint">Page address: <code>insight.php?slug=<span id="slug-preview"><?= htmlspecialchars($editItem['slug'] ?? 'your-slug') ?></span></code></div>
+                                <div class="form-hint">Page address: <code>insight?slug=<span id="slug-preview"><?= htmlspecialchars($editItem['slug'] ?? 'your-slug') ?></span></code></div>
                             </div>
 
                             <div class="form-group">
@@ -615,7 +615,7 @@ require_once __DIR__ . '/includes/header.php';
 
                 <!-- Submit Buttons -->
                 <div style="display: flex; justify-content: flex-end; gap: 12px; padding-top: 20px; border-top: 1px solid var(--border);">
-                    <a href="insights.php" class="btn-secondary">Cancel</a>
+                    <a href="insights" class="btn-secondary">Cancel</a>
                     <button type="submit" class="btn-primary" style="padding: 12px 28px; font-size: 15px;">
                         <i class="fa-solid fa-floppy-disk"></i>
                         <span><?= $action === 'edit' ? 'Update Insight' : 'Publish Insight' ?></span>
@@ -798,7 +798,7 @@ require_once __DIR__ . '/includes/header.php';
                 <div class="admin-card-title">All Insights Articles (<?= count($insights) ?>)</div>
                 <div style="font-size: 13px; color: var(--slate); margin-top: 4px;">Click any table heading to sort by column.</div>
             </div>
-            <a href="insights.php?action=add" class="btn-primary">
+            <a href="insights?action=add" class="btn-primary">
                 <i class="fa-solid fa-plus"></i>
                 <span>Add New Insight</span>
             </a>
@@ -898,7 +898,7 @@ require_once __DIR__ . '/includes/header.php';
                                     <div style="font-size: 11px; color: #64748B; margin-top: 3px;"><?= htmlspecialchars($item['description']) ?></div>
                                 </td>
                                 <td data-sort-val="<?= $item['is_active'] ?>">
-                                    <form method="POST" action="insights.php" style="display: inline;">
+                                    <form method="POST" action="insights" style="display: inline;">
                                         <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                                         <input type="hidden" name="post_action" value="toggle_status">
                                         <input type="hidden" name="toggle_id" value="<?= $item['id'] ?>">
@@ -912,7 +912,7 @@ require_once __DIR__ . '/includes/header.php';
                                 </td>
                                 <td style="text-align: right;">
                                     <div class="action-buttons" style="justify-content: flex-end;">
-                                        <a href="insights.php?action=edit&id=<?= $item['id'] ?>" class="btn-icon" title="Edit">
+                                        <a href="insights?action=edit&id=<?= $item['id'] ?>" class="btn-icon" title="Edit">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </a>
                                         <button type="button" class="btn-icon" style="color: #DC2626;" title="Delete" onclick="confirmDelete(<?= $item['id'] ?>, '<?= addslashes(htmlspecialchars($item['title'])) ?>')">
@@ -941,7 +941,7 @@ require_once __DIR__ . '/includes/header.php';
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                <form method="POST" action="insights.php" id="delete-form" style="display: inline;">
+                <form method="POST" action="insights" id="delete-form" style="display: inline;">
                     <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                     <input type="hidden" name="post_action" value="delete">
                     <input type="hidden" name="delete_id" id="delete-item-id" value="">

@@ -14,7 +14,7 @@ $stmt->execute([$adminId]);
 $adminUser = $stmt->fetch(PDO::FETCH_ASSOC);
 
 if (!$adminUser) {
-    header('Location: logout.php');
+    header('Location: logout');
     exit;
 }
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['csrf_token'] ?? '';
     if (!verifyCsrfToken($token)) {
         setFlash('error', 'Security check failed. Please try again.');
-        header('Location: profile.php');
+        header('Location: profile');
         exit;
     }
 
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             setFlash('success', 'Profile name updated successfully.');
         }
-        header('Location: profile.php');
+        header('Location: profile');
         exit;
     }
 
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             setFlash('success', 'Your password has been changed successfully.');
         }
-        header('Location: profile.php');
+        header('Location: profile');
         exit;
     }
 }
@@ -85,7 +85,7 @@ require_once __DIR__ . '/includes/header.php';
             <h2 style="font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 24px; color: var(--charcoal); margin: 0 0 4px 0;">Account Profile & Security</h2>
             <div style="font-size: 13px; color: var(--slate);">Manage your administrator display name and change your password.</div>
         </div>
-        <a href="index.php" class="btn-secondary">
+        <a href="./" class="btn-secondary">
             <i class="fa-solid fa-arrow-left"></i>
             <span>Back to Dashboard</span>
         </a>
@@ -108,7 +108,7 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
             </div>
             <div class="modal-body">
-                <form method="POST" action="profile.php">
+                <form method="POST" action="profile">
                     <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                     <input type="hidden" name="post_action" value="update_profile">
 
@@ -164,7 +164,7 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
             </div>
             <div class="modal-body">
-                <form method="POST" action="profile.php" id="password-form">
+                <form method="POST" action="profile" id="password-form">
                     <input type="hidden" name="csrf_token" value="<?= $csrfToken ?>">
                     <input type="hidden" name="post_action" value="change_password">
 

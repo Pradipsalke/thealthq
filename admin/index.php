@@ -54,7 +54,7 @@ $recentEnquiries = $db->query("SELECT * FROM enquiries ORDER BY id DESC LIMIT 5"
         </div>
     </div>
 
-    <a href="enquiries.php" class="stat-card" style="text-decoration: none; color: inherit;">
+    <a href="enquiries" class="stat-card" style="text-decoration: none; color: inherit;">
         <div class="stat-info">
             <h3>Newsletter Enquiries</h3>
             <div style="display: flex; align-items: baseline; gap: 8px;">
@@ -72,15 +72,15 @@ $recentEnquiries = $db->query("SELECT * FROM enquiries ORDER BY id DESC LIMIT 5"
 
 <!-- Quick Action Shortcuts -->
 <div style="display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap;">
-    <a href="insights.php?action=add" class="btn-primary">
+    <a href="insights?action=add" class="btn-primary">
         <i class="fa-solid fa-plus"></i>
         <span>Add New Insight</span>
     </a>
-    <a href="videos.php?action=add" class="btn-accent">
+    <a href="videos?action=add" class="btn-accent">
         <i class="fa-solid fa-cloud-arrow-up"></i>
         <span>Upload / Add Video</span>
     </a>
-    <a href="enquiries.php" class="btn-secondary">
+    <a href="enquiries" class="btn-secondary">
         <i class="fa-solid fa-envelope-open-text" style="color: #005B94;"></i>
         <span>Manage Enquiries</span>
     </a>
@@ -90,7 +90,7 @@ $recentEnquiries = $db->query("SELECT * FROM enquiries ORDER BY id DESC LIMIT 5"
 <div class="admin-card">
     <div class="admin-card-header">
         <div class="admin-card-title">Insights Carousel Content</div>
-        <a href="insights.php" class="btn-secondary" style="font-size: 13px;">Manage All Insights →</a>
+        <a href="insights" class="btn-secondary" style="font-size: 13px;">Manage All Insights →</a>
     </div>
     <div style="overflow-x: auto;">
         <table class="admin-table">
@@ -163,7 +163,7 @@ $recentEnquiries = $db->query("SELECT * FROM enquiries ORDER BY id DESC LIMIT 5"
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="insights.php?action=edit&id=<?= $item['id'] ?>" class="btn-icon" title="Edit">
+                                    <a href="insights?action=edit&id=<?= $item['id'] ?>" class="btn-icon" title="Edit">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                 </div>
@@ -179,7 +179,7 @@ $recentEnquiries = $db->query("SELECT * FROM enquiries ORDER BY id DESC LIMIT 5"
 <div class="admin-card">
     <div class="admin-card-header">
         <div class="admin-card-title">Videos Carousel Content</div>
-        <a href="videos.php" class="btn-secondary" style="font-size: 13px;">Manage All Videos →</a>
+        <a href="videos" class="btn-secondary" style="font-size: 13px;">Manage All Videos →</a>
     </div>
     <div style="overflow-x: auto;">
         <table class="admin-table">
@@ -253,7 +253,7 @@ $recentEnquiries = $db->query("SELECT * FROM enquiries ORDER BY id DESC LIMIT 5"
                             </td>
                             <td>
                                 <div class="action-buttons">
-                                    <a href="videos.php?action=edit&id=<?= $item['id'] ?>" class="btn-icon" title="Edit">
+                                    <a href="videos?action=edit&id=<?= $item['id'] ?>" class="btn-icon" title="Edit">
                                         <i class="fa-solid fa-pen-to-square"></i>
                                     </a>
                                 </div>
@@ -274,7 +274,7 @@ $recentEnquiries = $db->query("SELECT * FROM enquiries ORDER BY id DESC LIMIT 5"
                 <span class="badge-status new"><?= $newEnquiriesCount ?> new</span>
             <?php endif; ?>
         </div>
-        <a href="enquiries.php" class="btn-secondary" style="font-size: 13px;">Manage All Enquiries (<?= $enquiriesCount ?>) →</a>
+        <a href="enquiries" class="btn-secondary" style="font-size: 13px;">Manage All Enquiries (<?= $enquiriesCount ?>) →</a>
     </div>
     <div style="overflow-x: auto;">
         <table class="admin-table">
@@ -345,7 +345,7 @@ $recentEnquiries = $db->query("SELECT * FROM enquiries ORDER BY id DESC LIMIT 5"
                             </td>
                             <td style="text-align: right;">
                                 <div class="action-buttons" style="justify-content: flex-end;">
-                                    <a href="enquiries.php?search=<?= urlencode($enq['email']) ?>" class="btn-icon" title="View in Enquiries">
+                                    <a href="enquiries?search=<?= urlencode($enq['email']) ?>" class="btn-icon" title="View in Enquiries">
                                         <i class="fa-solid fa-arrow-right"></i>
                                     </a>
                                 </div>

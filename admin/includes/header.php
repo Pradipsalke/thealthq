@@ -31,18 +31,18 @@ $activePage = $activePage ?? 'dashboard';
             <h1 class="topbar-title"><?= htmlspecialchars($pageTitle ?? 'Dashboard') ?></h1>
         </div>
         <div class="topbar-right">
-            <a href="../index.php" target="_blank" class="btn-view-site">
+            <a href="../" target="_blank" class="btn-view-site">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 <span>View Website</span>
             </a>
-            <a href="profile.php" class="user-badge" title="Edit Profile & Password">
+            <a href="profile" class="user-badge" title="Edit Profile & Password">
                 <div class="user-avatar"><?= strtoupper(substr($_SESSION['admin_name'] ?? 'A', 0, 1)) ?></div>
                 <span class="user-name"><?= htmlspecialchars($_SESSION['admin_name'] ?? 'Admin') ?></span>
             </a>
-            <a href="profile.php" class="btn-icon" title="Profile & Security">
+            <a href="profile" class="btn-icon" title="Profile & Security">
                 <i class="fa-solid fa-user-gear"></i>
             </a>
-            <a href="logout.php" class="btn-icon" title="Log Out" style="color: #EF4444;">
+            <a href="logout" class="btn-icon" title="Log Out" style="color: #EF4444;">
                 <i class="fa-solid fa-right-from-bracket"></i>
             </a>
         </div>
